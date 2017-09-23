@@ -11,12 +11,15 @@ public:
     Quiz(unsigned int);
     void startQuiz();
     void stopQuiz();
-    double totalTime();
+    void writeResults(string);
 private:
+    string getCurrentTime();
+    double totalTime();
     void initQuiz(unsigned int);
     deque<Problem> question;
     unsigned int mistakes;
     unsigned int length;
     clock_t start;
     clock_t stop;
+    bool ran;
 };

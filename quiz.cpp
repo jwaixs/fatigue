@@ -1,10 +1,17 @@
 #include <iostream>
 #include <random>
 #include <functional>
+#include <fstream>
+#include <ctime>
+#include <iomanip>
+#include <string>
+
+#include <boost/filesystem.hpp>
 
 #include "quiz.h"
 
 using namespace std;
+using namespace boost;
 
 Quiz::Quiz() {
     length = 5;
@@ -17,9 +24,9 @@ Quiz::Quiz(unsigned int nquestions) {
 }
 
 void Quiz::initQuiz(unsigned int nquestions) {
-    default_random_engine generator;
+    mt19937::result_type seed = time(0);
     uniform_int_distribution<int> distribution(0,9);
-    auto dice = bind(distribution, generator);
+    auto dice = bind(distribution, mt19937(seed));
 
     for (unsigned int i = 0; i < nquestions; i++) {
         int const x = dice();
@@ -30,6 +37,7 @@ void Quiz::initQuiz(unsigned int nquestions) {
     }
 
     mistakes = 0;
+    ran = false;
 }
 
 void Quiz::startQuiz() {
@@ -51,6 +59,7 @@ void Quiz::startQuiz() {
         }
     }
     stop = clock();
+    ran = true;
 }
 
 double Quiz::totalTime() {
@@ -58,9 +67,44 @@ double Quiz::totalTime() {
 }
 
 void Quiz::stopQuiz() {
-    cout << "Stop quiz." << endl;
-    cout << "Number of questions: " << length << endl;
-    cout << "Number of mistakes: " << mistakes << endl;
-    cout << "Total time spend: " << totalTime() << endl;
-    cout << "Time spend per question: " << totalTime() / length << endl;
+    if (ran) {
+        cout << "Stop quiz." << endl;
+        cout << "Number of questions: " << length << endl;
+        cout << "Number of mistakes: " << mistakes << endl;
+        cout << "Total time spend: " << totalTime() << endl;
+        cout << "Time spend per question: " << totalTime() / length << endl;
+    }
+}
+
+string Quiz::getCurrentTime() {
+    /* I have no idea why it is so difficult to ask for the local time. */
+    time_t t = std::time(nullptr);
+    tm tm = *std::localtime(&t);
+ 
+    stringstream sstime;
+    sstime << put_time(&tm, "%Y-%m-%d %H:%M:%S");
+
+    return sstime.str();
+}
+
+void Quiz::writeResults(string filename) {
+    if (ran) {
+        ofstream outfile;
+
+        if (!filesystem::exists(filename.c_str())) {
+            outfile.open(filename);
+            outfile << "date,nquestions,mistakes,total time,time/question"
+                << endl;
+        } else {
+            outfile.open(filename, ios_base::app);
+        }
+
+        outfile << getCurrentTime()
+            << ", " << length
+            << ", " << mistakes
+            << ", " << totalTime()
+            << ", " << totalTime() / length
+            << endl;
+        outfile.close();
+    }
 }
