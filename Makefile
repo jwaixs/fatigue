@@ -1,5 +1,5 @@
 CXX=clang++
-CFLAGS=-I.
+CFLAGS=-I. -std=gnu++14
 DEPS=quiz.h problem.h
 OBJECTS=quiz.o problem.o
 
@@ -9,5 +9,9 @@ OBJECTS=quiz.o problem.o
 main: $(OBJECTS)
 	$(CXX) -o $@ $^ main.cpp $(CFLAGS)
 
+checker: $(OBJECTS)
+	$(CXX) -o $@ $^ checker.cpp $(CFLAGS)
+	./checker
+
 clean:
-	rm *.o main
+	rm *.o main checker
