@@ -5,7 +5,6 @@
 using namespace std;
 
 Problem::Problem(string const p, string const s) {
-    cout << "Problem::Problem()" << endl;
     problem = p;
     solution = s;
 }
