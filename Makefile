@@ -14,4 +14,4 @@ checker: $(OBJECTS)
 	./checker
 
 clean:
-	rm *.o main checker
+	rm -f *.o main checker
