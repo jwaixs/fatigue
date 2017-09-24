@@ -43,19 +43,24 @@ void Quiz::initQuiz(unsigned int nquestions) {
 void Quiz::startQuiz() {
     string answer;
     start = clock();
+    clock_t q_start, q_stop;
     while (!question.empty()) {
         auto p = question.front();
         question.pop_front();
 
         cout << p.getProblem() << " > ";
+        q_start = clock();
         if (!getline(cin, answer)) {
-            // I/O error
-            throw "Error";
+            throw runtime_error("I/O Error.");
         }
+        q_stop = clock();
+        p.addTime((q_stop - q_start) / 100.0);
         if (!p.isCorrect(answer)) {
-           cout << "Wrong!" << endl;
-           mistakes++;
-           question.push_back(p);
+            cout << "Wrong!" << endl;
+            mistakes++;
+            question.push_back(p);
+        } else {
+            correct_answers.push_back(p);
         }
     }
     stop = clock();
@@ -73,6 +78,12 @@ void Quiz::stopQuiz() {
         cout << "Number of mistakes: " << mistakes << endl;
         cout << "Total time spend: " << totalTime() << endl;
         cout << "Time spend per question: " << totalTime() / length << endl;
+
+        for (auto &p : correct_answers) {
+            cout << p.getProblem() << " = " << p.getSolution()
+                << ", " << p.getNumberOfTries()
+                << ", " << p.getTimeToSolve() << endl;
+        }
     }
 }
 
@@ -93,18 +104,41 @@ void Quiz::writeResults(string filename) {
 
         if (!filesystem::exists(filename.c_str())) {
             outfile.open(filename);
-            outfile << "date,nquestions,mistakes,total time,time/question"
+            outfile << "date,nquestions,mistakes,total_time,time/question"
                 << endl;
         } else {
             outfile.open(filename, ios_base::app);
         }
 
         outfile << getCurrentTime()
-            << ", " << length
-            << ", " << mistakes
-            << ", " << totalTime()
-            << ", " << totalTime() / length
+            << "," << length
+            << "," << mistakes
+            << "," << totalTime()
+            << "," << totalTime() / length
             << endl;
+        outfile.close();
+    }
+}
+
+void Quiz::writeResultsPerQuestion(string filename) {
+    if (ran) {
+        ofstream outfile;
+
+        if (!filesystem::exists(filename.c_str())) {
+            outfile.open(filename);
+            outfile << "date,problem,solution,number_of_tries,time_to_solve"
+                << endl;
+        } else {
+            outfile.open(filename, ios_base::app);
+        }
+
+        for (auto &p : correct_answers) {
+            outfile << getCurrentTime()
+                << "," << p.getProblem()
+                << "," << p.getSolution()
+                << "," << p.getNumberOfTries()
+                << "," << p.getTimeToSolve() << endl;
+        }
         outfile.close();
     }
 }

@@ -15,11 +15,13 @@ public:
     void startQuiz();
     void stopQuiz();
     void writeResults(string);
+    void writeResultsPerQuestion(string);
 private:
     string getCurrentTime();
     double totalTime();
     void initQuiz(unsigned int);
     deque<Problem> question;
+    deque<Problem> correct_answers;
     unsigned int mistakes;
     unsigned int length;
     clock_t start;
