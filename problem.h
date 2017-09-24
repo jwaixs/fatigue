@@ -11,9 +11,14 @@ public:
     string getProblem();
     string getSolution();
     bool isCorrect(string const);
+    void addTime(double);
+    unsigned int getNumberOfTries();
+    double getTimeToSolve();
 private:
     string problem;
     string solution;
+    unsigned int number_of_tries;
+    double time_to_solve;
 };
 
 #endif // PROBLEM_H
