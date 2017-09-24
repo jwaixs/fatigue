@@ -3,6 +3,9 @@
 
 #include "problem.h"
 
+#ifndef QUIZ_H
+#define QUIZ_H
+
 using namespace std;
 
 class Quiz {
@@ -23,3 +26,5 @@ private:
     clock_t stop;
     bool ran;
 };
+
+#endif // QUIZ_H
