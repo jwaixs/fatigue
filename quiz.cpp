@@ -2,7 +2,7 @@
 #include <random>
 #include <functional>
 #include <fstream>
-#include <ctime>
+#include <chrono>
 #include <iomanip>
 #include <string>
 
@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace chrono;
 
 Quiz::Quiz() {
     length = 5;
@@ -42,19 +43,25 @@ void Quiz::initQuiz(unsigned int nquestions) {
 
 void Quiz::startQuiz() {
     string answer;
-    start = clock();
-    clock_t q_start, q_stop;
+    start = duration_cast<milliseconds>(
+        steady_clock::now().time_since_epoch()
+    ).count();
+    unsigned int q_start, q_stop;
     while (!question.empty()) {
         auto p = question.front();
         question.pop_front();
 
         cout << p.getProblem() << " > ";
-        q_start = clock();
+        q_start = duration_cast<milliseconds>(
+            steady_clock::now().time_since_epoch()
+        ).count();
         if (!getline(cin, answer)) {
             throw runtime_error("I/O Error.");
         }
-        q_stop = clock();
-        p.addTime((q_stop - q_start) / 100.0);
+        q_stop = duration_cast<milliseconds>(
+            steady_clock::now().time_since_epoch()
+        ).count();
+        p.addTime((q_stop - q_start) / 1000.0);
         if (!p.isCorrect(answer)) {
             cout << "Wrong!" << endl;
             mistakes++;
@@ -63,12 +70,14 @@ void Quiz::startQuiz() {
             correct_answers.push_back(p);
         }
     }
-    stop = clock();
+    stop = duration_cast<milliseconds>(
+        steady_clock::now().time_since_epoch()
+    ).count();
     ran = true;
 }
 
 double Quiz::totalTime() {
-    return (stop - start) / 100.0;
+    return (stop - start) / 1000.0;
 }
 
 void Quiz::stopQuiz() {

@@ -1,5 +1,4 @@
 #include <deque>
-#include <ctime>
 
 #include "problem.h"
 
@@ -24,8 +23,8 @@ private:
     deque<Problem> correct_answers;
     unsigned int mistakes;
     unsigned int length;
-    clock_t start;
-    clock_t stop;
+    unsigned int start;
+    unsigned int stop;
     bool ran;
 };
 
