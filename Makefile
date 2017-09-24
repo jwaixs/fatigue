@@ -1,6 +1,6 @@
 CXX=clang++
 CFLAGS=-I. -std=gnu++14
-BOOSTFLAGS=-lboost_filesystem -lboost_system
+BOOSTFLAGS=-lboost_filesystem -lboost_system -lboost_program_options
 DEPS=quiz.h problem.h
 OBJECTS=quiz.o problem.o
 
