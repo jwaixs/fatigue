@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cmath>
 using namespace std;
 
 #include <boost/lexical_cast.hpp>
@@ -39,10 +40,8 @@ string ProblemStats::getAnswer() {
 void ProblemStats::addTry(unsigned int tries, double total_time) {
     number_of_tries += tries;
     number_of_correct_tries++;
-
-    for (unsigned int i = 0; i < tries; i++) {
-        time_per_try.push_back(total_time / tries);
-    }
+    acc(total_time);
+    time_per_try.push_back(total_time);
 }
 
 unsigned int ProblemStats::getNumberOfTries() {
@@ -55,6 +54,18 @@ unsigned int ProblemStats::getNumberOfCorrectTries() {
 
 vector<double> ProblemStats::getTimePerTry() {
     return time_per_try;
+}
+
+double ProblemStats::getMean() {
+    return mean(acc);
+}
+
+double ProblemStats::getMedian() {
+    return median(acc);
+}
+
+double ProblemStats::getStd() {
+    return sqrt(variance(acc));
 }
 
 Statistics::Statistics(string csv_path) {
@@ -94,7 +105,11 @@ void Statistics::readCSV(string csv_path) {
     }
 
     for (auto const ps : problem_statistics) {
-        cout << ps.first << " = " << ps.second->getTimePerTry() << endl;
+        cout << ps.first << " = " << ps.second->getAnswer() << endl;
+        cout << ps.second->getTimePerTry()
+            << " " << ps.second->getMean()
+            << " " << ps.second->getMedian()
+            << " " << ps.second->getStd() << endl;
     }
 }
 
