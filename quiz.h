@@ -1,4 +1,5 @@
 #include <deque>
+using namespace std;
 
 #include "problem.h"
 
