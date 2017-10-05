@@ -6,20 +6,24 @@ using namespace std;
 using namespace boost::program_options;
 
 #include "quiz.h"
+#include "memory_quiz.h"
 #include "stats.h"
 
 int main(int argc, char **argv) {
     string result_csv;
     string result_per_question_csv;
     unsigned int number_of_questions;
+    bool do_problem_quiz, do_memory_quiz;
 
     options_description desc("Allowed options");
     desc.add_options()
         ("help,h", "Print help usage.")
         ("stats,s", "Display statistics of quizes.")
-        ("result-csv,f", value(&result_csv)->required(), "Result csv output file.")
-        ("result-per-question-csv,g", value(&result_per_question_csv)->required(), "Result per question csv output file.")
-        ("number-of-questions,n", value(&number_of_questions)->default_value(5), "Number of questions. (default: 5)");
+        ("result-csv,f", value(&result_csv), "Result csv output file.")
+        ("result-per-question-csv,g", value(&result_per_question_csv), "Result per question csv output file.")
+        ("number-of-questions,n", value(&number_of_questions)->default_value(5), "Number of questions. (default: 5)")
+        ("problem-quiz,p", bool_switch(&do_problem_quiz)->default_value(false), "Do the problem quiz.")
+        ("memory-quiz,m", bool_switch(&do_memory_quiz)->default_value(false), "Do the memory quiz.");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
@@ -36,12 +40,32 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    Quiz quiz(number_of_questions);
-    cout << "Press enter to start the quiz.";
-    cin.get();
-    quiz.startQuiz();
-    quiz.stopQuiz();
-    quiz.writeResults(result_csv);
-    quiz.writeResultsPerQuestion(result_per_question_csv);
+    if (do_problem_quiz) {
+        Quiz quiz(number_of_questions);
+        cout << "Press enter to start the problem quiz.";
+        cin.get();
+        quiz.startQuiz();
+        quiz.stopQuiz();
+
+        if (vm.count("results-csv") > 0) {
+            quiz.writeResults(result_csv);
+        } else {
+            cout << "result-csv is not set, not saving results." << endl;
+        }
+
+        if (vm.count("results-per-question-csv") > 0) {
+            quiz.writeResultsPerQuestion(result_per_question_csv);
+        } else {
+            cout << "results-per-question-csv is not set, not saving results." << endl;
+        }
+    }
+
+    if (do_memory_quiz) {
+        MemoryQuiz memory_quiz(number_of_questions, 1000);
+        cout << "Press enter to start the memory quiz.";
+        cin.get();
+        memory_quiz.startQuiz();
+        memory_quiz.stopQuiz();
+    }
     return 0; 
 }
