@@ -47,16 +47,16 @@ int main(int argc, char **argv) {
         quiz.startQuiz();
         quiz.stopQuiz();
 
-        if (vm.count("results-csv") > 0) {
+        if (vm.count("results-csv") > 0 || vm.count("f") > 0) {
             quiz.writeResults(result_csv);
         } else {
             cout << "result-csv is not set, not saving results." << endl;
         }
 
-        if (vm.count("results-per-question-csv") > 0) {
+        if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
             quiz.writeResultsPerQuestion(result_per_question_csv);
         } else {
-            cout << "results-per-question-csv is not set, not saving results." << endl;
+            cout << "result-per-question-csv is not set, not saving results." << endl;
         }
     }
 
