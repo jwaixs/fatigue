@@ -71,6 +71,12 @@ int main(int argc, char **argv) {
         cin.get();
         memory_quiz.startQuiz();
         memory_quiz.stopQuiz();
+
+        if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
+            memory_quiz.writeResultsPerMemoryProblem(result_per_question_csv);
+        } else {
+            cout << "result-per-question-csv is not set, not saving results." << endl;
+        }
     }
     return 0; 
 }
