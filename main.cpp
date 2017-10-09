@@ -40,6 +40,11 @@ int main(int argc, char **argv) {
         return 0;
     }
 
+    if (do_problem_quiz && do_memory_quiz) {
+        cout << "Cannot do problem quiz and memory quiz at the same time."
+            << " Please select only one of the two options." << endl;
+    }
+
     if (do_problem_quiz) {
         Quiz quiz(number_of_questions);
         cout << "Press enter to start the problem quiz.";
