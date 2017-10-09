@@ -12,9 +12,9 @@ class MemoryQuiz {
 public:
     MemoryQuiz();
     MemoryQuiz(
-        unsigned int const number_of_problems,
-        unsigned int const sleep_time = 1000,
-        unsigned int const nnumbers = 10);
+    unsigned int const number_of_problems,
+    unsigned int const sleep_time = 1000,
+    unsigned int const nnumbers = 10);
     void startQuiz();
     void stopQuiz();
     void writeResultsPerMemoryProblem(string);
