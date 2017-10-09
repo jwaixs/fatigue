@@ -24,6 +24,7 @@ private:
     vector<tuple<MemoryProblem, string, unsigned int>> answers;
     unsigned int sleep_time_in_milliseconds;
     unsigned int number_of_numbers;
+    bool ran;
 };
 
 #endif // MEMORY_QUIZ_H

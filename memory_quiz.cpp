@@ -3,6 +3,10 @@
 #include <string>
 #include <tuple>
 #include <random>
+#include <fstream>
+
+#include <boost/filesystem.hpp>
+
 using namespace std;
 using namespace boost;
 
@@ -19,6 +23,7 @@ MemoryQuiz::MemoryQuiz(
         unsigned int const nnumbers) {
     sleep_time_in_milliseconds = sleep_time;
     number_of_numbers = nnumbers;
+    ran = false;
     initQuiz(number_of_problems);
 }
 
@@ -52,6 +57,8 @@ void MemoryQuiz::startQuiz() {
             tuple<MemoryProblem, string, unsigned int>{problem, answer, score}
         );
     }
+
+    ran = true;
 }
 
 void MemoryQuiz::stopQuiz() {
@@ -60,5 +67,25 @@ void MemoryQuiz::stopQuiz() {
        cout << get<0>(answer).getMemoryProblem()
           << ", " << get<1>(answer)
           << ", " << get<2>(answer) << endl; 
+    }
+}
+
+void MemoryQuiz::writeResultsPerMemoryProblem(string const filename) {
+    if (ran) {
+        ofstream outfile;
+
+        if (!filesystem::exists(filename.c_str())) {
+            outfile.open(filename);
+            outfile << "date,memory_problem,answer,correct" << endl;
+        } else {
+            outfile.open(filename, ios_base::app);
+        }
+
+        for (auto &answer : answers) {
+            outfile << getCurrentTime()
+                << "," << get<0>(answer).getMemoryProblem()
+                << "," << get<1>(answer)
+                << "," << get<2>(answer) << endl;
+        }
     }
 }
