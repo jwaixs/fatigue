@@ -9,6 +9,7 @@
 #include <boost/filesystem.hpp>
 
 #include "quiz.h"
+#include "tools.h"
 
 using namespace std;
 using namespace boost;
@@ -94,17 +95,6 @@ void Quiz::stopQuiz() {
                 << ", " << p.getTimeToSolve() << endl;
         }
     }
-}
-
-string Quiz::getCurrentTime() {
-    /* I have no idea why it is so difficult to ask for the local time. */
-    time_t t = std::time(nullptr);
-    tm tm = *std::localtime(&t);
- 
-    stringstream sstime;
-    sstime << put_time(&tm, "%Y-%m-%d %H:%M:%S");
-
-    return sstime.str();
 }
 
 void Quiz::writeResults(string filename) {

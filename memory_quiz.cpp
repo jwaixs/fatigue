@@ -1,12 +1,13 @@
 #include <iostream>
-#include <chrono>
 #include <thread>
 #include <string>
 #include <tuple>
 #include <random>
 using namespace std;
+using namespace boost;
 
 #include "memory_quiz.h"
+#include "tools.h"
 
 MemoryQuiz::MemoryQuiz() {
     MemoryQuiz(5);

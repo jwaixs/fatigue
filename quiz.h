@@ -17,7 +17,6 @@ public:
     void writeResults(string);
     void writeResultsPerQuestion(string);
 private:
-    string getCurrentTime();
     double totalTime();
     void initQuiz(unsigned int);
     deque<Problem> question;
