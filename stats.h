@@ -35,6 +35,7 @@ class Statistics {
 public:
     Statistics(string);
     void readCSV(string);
+    void printProblemMeanHistogram();
 private:
     map<string, ProblemStats *> problem_statistics;
 };
