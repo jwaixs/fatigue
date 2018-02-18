@@ -1,25 +1,25 @@
 #include <iostream>
 
-#include "problem.h"
+#include "speed_problem.h"
 
 using namespace std;
 
-Problem::Problem(string const p, string const s) {
+SpeedProblem::SpeedProblem(string const p, string const s) {
     problem = p;
     solution = s;
     number_of_tries = 1;
     time_to_solve = 0.0;
 }
 
-string Problem::getProblem() {
+string SpeedProblem::getProblem() {
     return problem;
 }
 
-string Problem::getSolution() {
+string SpeedProblem::getSolution() {
     return solution;
 }
 
-bool Problem::isCorrect(string const answer) {
+bool SpeedProblem::isCorrect(string const answer) {
     if (answer == solution) {
         return true;
     } else {
@@ -28,7 +28,7 @@ bool Problem::isCorrect(string const answer) {
     }
 }
 
-void Problem::addTime(double time) {
+void SpeedProblem::addTime(double time) {
     if (time > 0) {
         time_to_solve += time;
     } else {
@@ -36,10 +36,10 @@ void Problem::addTime(double time) {
     }
 }
 
-unsigned int Problem::getNumberOfTries() {
+unsigned int SpeedProblem::getNumberOfTries() {
     return number_of_tries;
 }
 
-double Problem::getTimeToSolve() {
+double SpeedProblem::getTimeToSolve() {
     return time_to_solve;
 }

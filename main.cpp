@@ -5,7 +5,7 @@ using namespace std;
 #include <boost/program_options.hpp>
 using namespace boost::program_options;
 
-#include "quiz.h"
+#include "speed_quiz.h"
 #include "memory_quiz.h"
 #include "stats.h"
 
@@ -54,20 +54,20 @@ int main(int argc, char **argv) {
     }
 
     if (do_problem_quiz) {
-        Quiz quiz(number_of_questions);
+        SpeedQuiz speed_quiz(number_of_questions);
         cout << "Press enter to start the problem quiz.";
         cin.get();
-        quiz.startQuiz();
-        quiz.stopQuiz();
+        speed_quiz.startQuiz();
+        speed_quiz.stopQuiz();
 
         if (vm.count("results-csv") > 0 || vm.count("f") > 0) {
-            quiz.writeResults(result_csv);
+            speed_quiz.writeResults(result_csv);
         } else {
             cout << "result-csv is not set, not saving results." << endl;
         }
 
         if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
-            quiz.writeResultsPerQuestion(result_per_question_csv);
+            speed_quiz.writeResultsPerQuestion(result_per_question_csv);
         } else {
             cout << "result-per-question-csv is not set, not saving results." << endl;
         }

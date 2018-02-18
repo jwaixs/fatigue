@@ -1,13 +1,13 @@
 #include <string>
 
-#ifndef PROBLEM_H
-#define PROBLEM_H
+#ifndef SPEED_PROBLEM_H
+#define SPEED_PROBLEM_H
 
 using namespace std;
 
-class Problem {
+class SpeedProblem {
 public:
-    Problem(string const, string const);
+    SpeedProblem(string const, string const);
     string getProblem();
     string getSolution();
     bool isCorrect(string const);
@@ -21,4 +21,4 @@ private:
     double time_to_solve;
 };
 
-#endif // PROBLEM_H
+#endif // SPEED_PROBLEM_H

@@ -1,17 +1,17 @@
 #include <deque>
 using namespace std;
 
-#include "problem.h"
+#include "speed_problem.h"
 
-#ifndef QUIZ_H
-#define QUIZ_H
+#ifndef SPEED_QUIZ_H
+#define SPEED_QUIZ_H
 
 using namespace std;
 
-class Quiz {
+class SpeedQuiz {
 public:
-    Quiz();
-    Quiz(unsigned int);
+    SpeedQuiz();
+    SpeedQuiz(unsigned int);
     void startQuiz();
     void stopQuiz();
     void writeResults(string);
@@ -19,8 +19,8 @@ public:
 private:
     double totalTime();
     void initQuiz(unsigned int);
-    deque<Problem> question;
-    deque<Problem> correct_answers;
+    deque<SpeedProblem> question;
+    deque<SpeedProblem> correct_answers;
     unsigned int mistakes;
     unsigned int length;
     unsigned int start;
@@ -28,4 +28,4 @@ private:
     bool ran;
 };
 
-#endif // QUIZ_H
+#endif // SPEED_QUIZ_H

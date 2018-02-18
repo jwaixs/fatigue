@@ -8,24 +8,24 @@
 
 #include <boost/filesystem.hpp>
 
-#include "quiz.h"
+#include "speed_quiz.h"
 #include "tools.h"
 
 using namespace std;
 using namespace boost;
 using namespace chrono;
 
-Quiz::Quiz() {
+SpeedQuiz::SpeedQuiz() {
     length = 5;
     initQuiz(length);
 }
 
-Quiz::Quiz(unsigned int nquestions) {
+SpeedQuiz::SpeedQuiz(unsigned int nquestions) {
     length = nquestions;
     initQuiz(length);
 }
 
-void Quiz::initQuiz(unsigned int nquestions) {
+void SpeedQuiz::initQuiz(unsigned int nquestions) {
     mt19937::result_type seed = time(0);
     uniform_int_distribution<int> distribution(0,9);
     auto dice = bind(distribution, mt19937(seed));
@@ -34,7 +34,7 @@ void Quiz::initQuiz(unsigned int nquestions) {
         int const x = dice();
         int const y = dice();
         int const z = x + y;
-        Problem p(to_string(x) + " + " + to_string(y), to_string(z));
+        SpeedProblem p(to_string(x) + " + " + to_string(y), to_string(z));
         question.push_back(p);
     }
 
@@ -42,7 +42,7 @@ void Quiz::initQuiz(unsigned int nquestions) {
     ran = false;
 }
 
-void Quiz::startQuiz() {
+void SpeedQuiz::startQuiz() {
     string answer;
     start = duration_cast<milliseconds>(
         steady_clock::now().time_since_epoch()
@@ -77,11 +77,11 @@ void Quiz::startQuiz() {
     ran = true;
 }
 
-double Quiz::totalTime() {
+double SpeedQuiz::totalTime() {
     return (stop - start) / 1000.0;
 }
 
-void Quiz::stopQuiz() {
+void SpeedQuiz::stopQuiz() {
     if (ran) {
         cout << "Stop quiz." << endl;
         cout << "Number of questions: " << length << endl;
@@ -97,7 +97,7 @@ void Quiz::stopQuiz() {
     }
 }
 
-void Quiz::writeResults(string filename) {
+void SpeedQuiz::writeResults(string filename) {
     if (ran) {
         ofstream outfile;
 
@@ -119,7 +119,7 @@ void Quiz::writeResults(string filename) {
     }
 }
 
-void Quiz::writeResultsPerQuestion(string filename) {
+void SpeedQuiz::writeResultsPerQuestion(string filename) {
     if (ran) {
         ofstream outfile;
 
