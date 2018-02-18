@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 set (CMAKE_CXX_STANDARD 11)
 project (fatigue)
 
-find_package(Boost REQUIRED COMPONENTS program_options system filesystem)
+find_package(Boost REQUIRED COMPONENTS program_options system filesystem unit_test_framework)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(tools tools.cpp)
@@ -16,3 +16,6 @@ add_library(stats stats.cpp)
 
 add_executable(main main.cpp)
 target_link_libraries(main ${Boost_LIBRARIES} memory_quiz speed_quiz stats)
+
+add_executable(tests tests.cpp)
+target_link_libraries(tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
