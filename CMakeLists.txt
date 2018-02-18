@@ -18,4 +18,4 @@ add_executable(main main.cpp)
 target_link_libraries(main ${Boost_LIBRARIES} memory_quiz speed_quiz stats)
 
 add_executable(tests tests.cpp)
-target_link_libraries(tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+target_link_libraries(tests ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} speed_problem)
