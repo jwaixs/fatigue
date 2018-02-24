@@ -4,7 +4,7 @@
 #include <string>
 
 #include "speed_problem.h"
-#include "speed_quiz.h"
+#include "memory_problem.h"
 
 BOOST_AUTO_TEST_CASE(sanity_check) {
     auto const i = 1;
@@ -41,4 +41,44 @@ BOOST_AUTO_TEST_CASE(speed_problem) {
             "Speed problem has been tried twice.");
 
     BOOST_CHECK_SMALL(sp.getTimeToSolve() - t1 - t2, 0.00001);
+}
+
+BOOST_AUTO_TEST_CASE(memory_problem) {
+    std::string const problem = "12345";
+    std::string const wrong_guess = "abcde";
+
+    MemoryProblem mp(problem);
+
+    BOOST_CHECK_MESSAGE(mp.getMemoryProblem() == problem,
+            "Memory problem should properly working getMemoryProblem()");
+    BOOST_CHECK_MESSAGE(mp.correctNumber("") == 0,
+            "Empty string should give zero correct numbers");
+    BOOST_CHECK_MESSAGE(mp.correctNumber(problem) == problem.size(),
+            "The correct number of the solution should be equal to the size "
+            "of the problem.");
+    BOOST_CHECK_MESSAGE(mp.correctNumber(problem + "abcde") == problem.size(),
+            "correctNumber() should support longer guesses.");
+
+    for (unsigned long i = 0; i < problem.size(); i++) {
+        auto const guess = problem.substr(0, i);
+        BOOST_CHECK_MESSAGE(mp.correctNumber(guess) == i,
+            "First " + std::to_string(i) + " correct characters should give "
+            + std::to_string(i) + " correct numbers.");
+    }
+
+    for (auto i = 0; i < std::pow(2, problem.size()); i++) {
+        std::string guess = wrong_guess;
+        unsigned int correct = 0;
+        for (unsigned int j = 0; j < problem.size(); j++) {
+            bool const bit_switch = (1 << j) & i;
+            if (bit_switch) {
+                guess[j] = problem[j];
+                correct++;
+            }
+        }
+
+        BOOST_CHECK_MESSAGE(mp.correctNumber(guess) == correct,
+            "Guess " + guess + " should have " + std::to_string(correct)
+            + " correct characters in " + problem + ".");
+    }
 }
