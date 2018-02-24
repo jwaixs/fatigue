@@ -47,6 +47,11 @@ void ProblemStats::addTry(unsigned int tries, double total_time) {
     time_per_try.push_back(total_time);
 }
 
+void ProblemStats::addTry(unsigned int tries, double total_time, string date) {
+    date_per_try.push_back(date);
+    addTry(tries, total_time);
+}
+
 unsigned int ProblemStats::getNumberOfTries() {
     return number_of_tries;
 }
@@ -57,6 +62,10 @@ unsigned int ProblemStats::getNumberOfCorrectTries() {
 
 vector<double> ProblemStats::getTimePerTry() {
     return time_per_try;
+}
+
+vector<string> ProblemStats::getDatePerTry() {
+    return date_per_try;
 }
 
 double ProblemStats::getMean() {
@@ -86,13 +95,14 @@ void Statistics::readCSV(string csv_path) {
     // Get header, and drop it.
     getline(csv, line);
 
-    string problem, answer;
+    string date, problem, answer;
     unsigned int tries;
     double time;
     while (getline(csv, line)) {
         Tokenizer tok(line);
         svec.assign(tok.begin(), tok.end());
 
+        date = svec.at(0);
         problem = svec.at(1);
         answer = svec.at(2);
         tries = lexical_cast<unsigned int>(svec.at(3));
@@ -104,7 +114,7 @@ void Statistics::readCSV(string csv_path) {
                 problem, new ProblemStats(problem, answer)
             );
         }
-        problem_statistics[problem]->addTry(tries, time);
+        problem_statistics[problem]->addTry(tries, time, date);
     }
 }
 
@@ -145,7 +155,7 @@ void Statistics::printProblemMeanHistogram() {
 
         std::cout << format("%-4f - %-4f: ") % (min + i*bin_length) % (min + (i+1)*bin_length);
 
-        auto const hist_bar_size = (bar_width * histogram.at(i)) / hist_max_size;
+        unsigned int const hist_bar_size = (bar_width * histogram.at(i)) / hist_max_size;
         for (unsigned int j = 0; j < hist_bar_size; j++) {
             std::cout << "-";
         }

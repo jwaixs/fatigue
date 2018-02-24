@@ -135,4 +135,37 @@ BOOST_AUTO_TEST_CASE(statistic) {
             "Median should be equal to 0.3.");
     BOOST_CHECK_MESSAGE(std::abs(ps.getStd()*ps.getStd() - 0.26) < tolerance,
             "Std squared should be equal to 0.26.");
+
+    ProblemStats psd(problem, answer);
+
+    std::vector<std::string> dates{"01-01-01", "02-02-02", "03-03-03",
+                                   "04-04-04", "05-05-05"};
+
+    std::string t3;
+    for (auto const &try_time_date : boost::combine(tries, times, dates)) {
+        boost::tie(t1, t2, t3) = try_time_date;
+        psd.addTry(t1, t2, t3);
+    }
+
+    BOOST_CHECK_MESSAGE(psd.getNumberOfTries() == number_of_tries,
+            "getNumberOfTries should be equal to "
+            + std::to_string(number_of_tries));
+    BOOST_CHECK_MESSAGE(psd.getTimePerTry().size() == tries.size(),
+            "getTimePerTry size should be equal to "
+            + std::to_string(tries.size()));
+    BOOST_CHECK_MESSAGE(psd.getNumberOfCorrectTries() == tries.size(),
+            "getNumberOfCorrectTries should be equal to "
+            + std::to_string(tries.size()));
+
+    auto const psd_dates = psd.getDatePerTry();
+    BOOST_CHECK_EQUAL_COLLECTIONS(
+        psd_dates.begin(), psd_dates.end(), dates.begin(), dates.end()
+    );
+
+    BOOST_CHECK_MESSAGE(std::abs(psd.getMean() - 0.5) < tolerance,
+            "Mean should be equal to 0.5.");
+    BOOST_CHECK_MESSAGE(std::abs(psd.getMedian() - 0.3) < tolerance,
+            "Median should be equal to 0.3.");
+    BOOST_CHECK_MESSAGE(std::abs(psd.getStd()*psd.getStd() - 0.26) < tolerance,
+            "Std squared should be equal to 0.26.");
 }

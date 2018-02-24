@@ -16,9 +16,11 @@ public:
     string getProblem();
     string getAnswer();
     void addTry(unsigned int, double);
+    void addTry(unsigned int, double, string);
     unsigned int getNumberOfTries();
     unsigned int getNumberOfCorrectTries();
     vector<double> getTimePerTry();
+    vector<string> getDatePerTry();
     double getMean();
     double getMedian();
     double getStd();
@@ -28,6 +30,7 @@ private:
     unsigned int number_of_tries;
     unsigned int number_of_correct_tries;
     vector<double> time_per_try;
+    vector<string> date_per_try;
     accumulator_set<double, features<tag::mean, tag::median, tag::variance>> acc;
 };
 
