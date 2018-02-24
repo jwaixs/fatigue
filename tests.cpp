@@ -4,6 +4,7 @@
 #include <string>
 
 #include "speed_problem.h"
+#include "speed_quiz.h"
 
 BOOST_AUTO_TEST_CASE(sanity_check) {
     auto const i = 1;

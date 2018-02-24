@@ -104,14 +104,6 @@ void Statistics::readCSV(string csv_path) {
         }
         problem_statistics[problem]->addTry(tries, time);
     }
-
-    //for (auto const &ps : problem_statistics) {
-    //    cout << ps.first << " = " << ps.second->getAnswer() << endl;
-    //    cout << ps.second->getTimePerTry()
-    //        << " " << ps.second->getMean()
-    //        << " " << ps.second->getMedian()
-    //        << " " << ps.second->getStd() << endl;
-    //}
 }
 
 void Statistics::printProblemMeanHistogram() {
