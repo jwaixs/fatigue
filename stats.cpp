@@ -28,6 +28,8 @@ ostream& operator<< (ostream& out, const vector<T>& v) {
 ProblemStats::ProblemStats(string p, string a) {
     problem = p;
     answer = a;
+    number_of_tries = 0;
+    number_of_correct_tries = 0;
 }
 
 string ProblemStats::getProblem() {
