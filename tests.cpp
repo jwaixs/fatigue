@@ -1,10 +1,16 @@
 #define BOOST_TEST_MODULE Fatigue_Test_Suite
 #include <boost/test/included/unit_test.hpp>
+#include <boost/range/combine.hpp>
 
 #include <string>
 
 #include "speed_problem.h"
 #include "memory_problem.h"
+#include "stats.h"
+
+// Floating point tolerance. I don't know how to get unit_test::tolerance
+// working. Hence I test it myself.
+auto const tolerance = 0.00001;
 
 BOOST_AUTO_TEST_CASE(sanity_check) {
     auto const i = 1;
@@ -81,4 +87,52 @@ BOOST_AUTO_TEST_CASE(memory_problem) {
             "Guess " + guess + " should have " + std::to_string(correct)
             + " correct characters in " + problem + ".");
     }
+}
+
+BOOST_AUTO_TEST_CASE(statistic) {
+    std::string const problem = "problem";
+    std::string const answer = "answer";
+
+    ProblemStats ps(problem, answer);
+
+    BOOST_CHECK_MESSAGE(ps.getProblem() == problem,
+            "getProblem() should return problem.");
+    BOOST_CHECK_MESSAGE(ps.getAnswer() == answer,
+            "getAnswer() should return answer.");
+
+    BOOST_CHECK_MESSAGE(ps.getNumberOfTries() == 0,
+            "Initial getNumberOfTries() should be zero.");
+    BOOST_CHECK_MESSAGE(ps.getTimePerTry().size() == 0,
+            "Initial getTimePerTry() should be zero.");
+    BOOST_CHECK_MESSAGE(ps.getNumberOfCorrectTries() == 0,
+            "Initial getNumberOfCorrectTries should be zero.");
+
+    std::vector<unsigned int> tries{1, 2, 3, 4, 5};
+    std::vector<double> times{0.1, 0.2, 0.3, 0.4, 1.5};
+
+    unsigned int t1;
+    double t2;
+    for (auto const &try_time : boost::combine(tries, times)) {
+        boost::tie(t1, t2) = try_time;
+        ps.addTry(t1, t2);
+    }
+
+    unsigned int number_of_tries = std::accumulate(tries.begin(), tries.end(), 0);
+
+    BOOST_CHECK_MESSAGE(ps.getNumberOfTries() == number_of_tries,
+            "getNumberOfTries should be equal to "
+            + std::to_string(number_of_tries));
+    BOOST_CHECK_MESSAGE(ps.getTimePerTry().size() == tries.size(),
+            "getTimePerTry size should be equal to "
+            + std::to_string(tries.size()));
+    BOOST_CHECK_MESSAGE(ps.getNumberOfCorrectTries() == tries.size(),
+            "getNumberOfCorrectTries should be equal to "
+            + std::to_string(tries.size()));
+
+    BOOST_CHECK_MESSAGE(std::abs(ps.getMean() - 0.5) < tolerance,
+            "Mean should be equal to 0.5.");
+    BOOST_CHECK_MESSAGE(std::abs(ps.getMedian() - 0.3) < tolerance,
+            "Median should be equal to 0.3.");
+    BOOST_CHECK_MESSAGE(std::abs(ps.getStd()*ps.getStd() - 0.26) < tolerance,
+            "Std squared should be equal to 0.26.");
 }
