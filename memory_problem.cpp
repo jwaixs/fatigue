@@ -1,7 +1,7 @@
 #include "memory_problem.h"
 
 MemoryProblem::MemoryProblem(string const p) {
-   memory_problem = p; 
+   memory_problem = p;
 }
 
 string MemoryProblem::getMemoryProblem() {
