@@ -30,3 +30,7 @@ string getMonth(boost::posix_time::ptime const ptime) {
     auto const month = ptime.date().month().as_short_string();
     return string(month);
 }
+
+unsigned short getHourOfDay(boost::posix_time::ptime const ptime) {
+    return ptime.time_of_day().hours();
+}
