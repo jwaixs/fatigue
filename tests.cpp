@@ -7,6 +7,7 @@
 #include "speed_problem.h"
 #include "memory_problem.h"
 #include "stats.h"
+#include "tools.h"
 
 // Floating point tolerance. I don't know how to get unit_test::tolerance
 // working. Hence I test it myself.
@@ -168,4 +169,32 @@ BOOST_AUTO_TEST_CASE(statistic) {
             "Median should be equal to 0.3.");
     BOOST_CHECK_MESSAGE(std::abs(psd.getStd()*psd.getStd() - 0.26) < tolerance,
             "Std squared should be equal to 0.26.");
+}
+
+BOOST_AUTO_TEST_CASE(time_tools) {
+    std::string const time_str = "2018-02-25 11:09:01";
+    auto const current_ptime = ptimeFromString(time_str);
+
+    auto const current_date = current_ptime.date();
+    BOOST_CHECK_MESSAGE(current_date.year() == 2018,
+            "Current year should be 2018.");
+    BOOST_CHECK_MESSAGE(
+        std::strcmp(current_date.month().as_short_string(), "Feb") == 0,
+        "Current month should be Feb.");
+    BOOST_CHECK_MESSAGE(
+        std::strcmp(current_date.day_of_week().as_short_string(), "Sun") == 0,
+        "Current day of the week should be Sun.");
+
+    BOOST_CHECK_MESSAGE(getDayOfWeek(current_ptime) == "Sun",
+            "getDayOfWeek should be Sun.");
+    BOOST_CHECK_MESSAGE(getMonth(current_ptime) == "Feb",
+            "getMonth should be Feb.");
+
+    auto const current_time = current_ptime.time_of_day();
+    BOOST_CHECK_MESSAGE(current_time.hours() == 11,
+            "Current hour should be 11.");
+    BOOST_CHECK_MESSAGE(current_time.minutes() == 9,
+            "Current minutes should be 9.");
+    BOOST_CHECK_MESSAGE(current_time.seconds() == 1,
+            "Current seconds should be 1.");
 }
