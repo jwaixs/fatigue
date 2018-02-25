@@ -45,6 +45,9 @@ int main(int argc, char **argv) {
         std::cout << "Speed problem histogram:" << std::endl;
         stats.printProblemMeanHistogram();
 
+        std::cout << "Speed problem per hour:" << std::endl;
+        stats.printSpeedProblemPerHour();
+
         return 0;
     }
 

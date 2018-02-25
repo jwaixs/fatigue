@@ -8,9 +8,11 @@ using namespace std;
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/format.hpp>
+#include <boost/range/combine.hpp>
 using namespace boost;
 
 #include "stats.h"
+#include "tools.h"
 
 template<typename T>
 ostream& operator<< (ostream& out, const vector<T>& v) {
@@ -122,9 +124,6 @@ void Statistics::printProblemMeanHistogram() {
     // Number of bins to show maximal in histogram
     auto const bins = 50;
 
-    // Width of the histogram bar.
-    auto const bar_width = 60;
-
     // Minimal number of elements in a histogram bin.
     auto const min_hist_size = 10;
 
@@ -161,5 +160,71 @@ void Statistics::printProblemMeanHistogram() {
         }
 
         std::cout << "| (" << histogram.at(i) << ")" << std::endl;
+    }
+}
+
+void Statistics::printSpeedProblemPerDay() {
+
+}
+
+void Statistics::printSpeedProblemPerHour() {
+    auto const min_tries_threshold = 10;
+
+    std::vector<double> time_per_hour;
+    std::vector<unsigned int> num_of_tries_per_hour;
+
+    time_per_hour.resize(24);
+    num_of_tries_per_hour.resize(24);
+
+    double time;
+    std::string date;
+    for (auto const &ps : problem_statistics) {
+        auto const &time_per_try = ps.second->getTimePerTry();
+        auto const &date_per_try = ps.second->getDatePerTry();
+        for (auto const &time_date : boost::combine(time_per_try, date_per_try)) {
+            boost::tie(time, date) = time_date;
+            auto const pdate = ptimeFromString(date);
+            auto const hour = getHourOfDay(pdate);
+
+            time_per_hour.at(hour) += time;
+            num_of_tries_per_hour.at(hour)++;
+        }
+    }
+
+    std::vector<double> mean_per_hour;
+    float min = 0;
+    float max = 0;
+    for (unsigned int hour = 0; hour < 24; hour++) {
+        auto const total_time = time_per_hour.at(hour);
+        auto const total_tries = num_of_tries_per_hour.at(hour);
+
+        if (total_tries > min_tries_threshold) {
+            auto const mean = total_time / total_tries;
+            mean_per_hour.push_back(mean);
+
+
+            min = (min == 0 || min > mean) ? mean : min;
+            max = (max < mean) ? mean : max;
+        } else {
+            mean_per_hour.push_back(0);
+        }
+    }
+
+    for (unsigned int hour = 0; hour < 24; hour++) {
+        auto const mean_time = mean_per_hour.at(hour);
+        auto const total_tries = num_of_tries_per_hour.at(hour);
+
+        if (total_tries < min_tries_threshold) {
+            continue;
+        }
+
+        std::cout << format("%-2i:00-%-2i:00: ") % hour % (hour + 1);
+
+        auto const width = (mean_time - min) / (max - min) * bar_width;
+        for (unsigned int i = 0; i < width; i++) {
+            std::cout << "-";
+        }
+        std::cout << "| (" << mean_time << "/" << total_tries << ")"
+            << std::endl;
     }
 }

@@ -39,8 +39,11 @@ public:
     Statistics(string);
     void readCSV(string);
     void printProblemMeanHistogram();
+    void printSpeedProblemPerHour();
+    void printSpeedProblemPerDay();
 private:
     map<string, ProblemStats *> problem_statistics;
+    unsigned short const bar_width = 60;
 };
 
 #endif /* STATS_H */
