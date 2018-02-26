@@ -2,6 +2,9 @@ cmake_minimum_required (VERSION 2.6)
 set (CMAKE_CXX_STANDARD 11)
 project (fatigue)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+
 find_package(Boost REQUIRED COMPONENTS program_options system filesystem
                                        date_time unit_test_framework)
 include_directories(${Boost_INCLUDE_DIRS})
