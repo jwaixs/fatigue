@@ -8,6 +8,7 @@ using namespace boost::program_options;
 #include "speed_quiz.h"
 #include "memory_quiz.h"
 #include "stats.h"
+#include "stats_type.h"
 
 int main(int argc, char **argv) {
     string result_csv;
@@ -53,13 +54,23 @@ int main(int argc, char **argv) {
         if (display_median) {
             std::cout << std::endl
                 << "Speed problem per hour (median / num of tries):" << std::endl;
-            stats.printSpeedProblemPerHour();
+            stats.printSpeedProblemPerHour(StatsType::Median);
+        }
+        if (display_mean) {
+            std::cout << std::endl
+                << "Speed problem per hour (mean / num of tries):" << std::endl;
+            stats.printSpeedProblemPerHour(StatsType::Mean);
         }
 
         if (display_median) {
             std::cout << std::endl
                 << "Speed problem per day (median / num of tries):" << std::endl;
-            stats.printSpeedProblemPerDay();
+            stats.printSpeedProblemPerDay(StatsType::Median);
+        }
+        if (display_mean) {
+            std::cout << std::endl
+                << "Speed problem per day (mean / num of tries):" << std::endl;
+            stats.printSpeedProblemPerDay(StatsType::Mean);
         }
 
         return 0;

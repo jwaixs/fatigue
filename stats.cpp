@@ -164,6 +164,11 @@ void Statistics::printProblemMeanHistogram() {
 }
 
 void Statistics::printSpeedProblemPerDay() {
+    // Choose Median as default.
+    printSpeedProblemPerDay(StatsType::Median);
+}
+
+void Statistics::printSpeedProblemPerDay(StatsType const &stats_type) {
     auto const min_tries_threshold = 10;
 
     std::vector<std::string> days_of_the_week{
@@ -201,7 +206,15 @@ void Statistics::printSpeedProblemPerDay() {
     std::map<std::string, double> value_time_per_day;
     for (auto const &day : days_of_the_week) {
         if (num_of_tries_per_day[day] > min_tries_threshold) {
-            auto const value = median(time_per_day[day]);
+            double value;
+
+            if (stats_type == StatsType::Median) {
+                value = median(time_per_day[day]);
+            } else if (stats_type == StatsType::Mean) {
+                value = mean(time_per_day[day]);
+            } else {
+                throw std::runtime_error("StatsType not implemented.");
+            }
 
             value_time_per_day[day] = value;
 
@@ -230,6 +243,11 @@ void Statistics::printSpeedProblemPerDay() {
 }
 
 void Statistics::printSpeedProblemPerHour() {
+    // Choose median per default.
+    printSpeedProblemPerHour(StatsType::Median);
+}
+
+void Statistics::printSpeedProblemPerHour(StatsType const &stats_type) {
     auto const min_tries_threshold = 10;
 
     using acc = accumulator_set<double, features<tag::mean, tag::median, tag::count>>;
@@ -258,7 +276,14 @@ void Statistics::printSpeedProblemPerHour() {
         auto const total_tries = boost::accumulators::count(acc_per_hour.at(hour));
 
         if (total_tries > min_tries_threshold) {
-            auto const value = median(acc_per_hour.at(hour));
+            double value;
+            if (stats_type == StatsType::Median) {
+                value = median(acc_per_hour.at(hour));
+            } else if (stats_type == StatsType::Mean) {
+                value = mean(acc_per_hour.at(hour));
+            } else {
+                throw std::runtime_error("StatsType not implemented.");
+            }
             value_per_hour.push_back(value);
 
             min = (min == 0 || min > value) ? value : min;

@@ -7,6 +7,8 @@ using namespace std;
 #include <boost/accumulators/statistics.hpp>
 using namespace boost::accumulators;
 
+#include "stats_type.h"
+
 #ifndef STATS_H
 #define STATS_H
 
@@ -40,7 +42,9 @@ public:
     void readCSV(string);
     void printProblemMeanHistogram();
     void printSpeedProblemPerHour();
+    void printSpeedProblemPerHour(StatsType const &);
     void printSpeedProblemPerDay();
+    void printSpeedProblemPerDay(StatsType const &);
 private:
     map<string, ProblemStats *> problem_statistics;
     unsigned short const bar_width = 60;
