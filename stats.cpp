@@ -164,17 +164,78 @@ void Statistics::printProblemMeanHistogram() {
 }
 
 void Statistics::printSpeedProblemPerDay() {
+    auto const min_tries_threshold = 10;
 
+    std::vector<std::string> days_of_the_week{
+        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
+    };
+
+    using acc = accumulator_set<double, features<tag::mean, tag::median>>;
+
+    std::map<std::string, acc> time_per_day;
+    std::map<std::string, unsigned int> num_of_tries_per_day;
+
+    for (auto const &day : days_of_the_week) {
+        acc new_acc;
+        time_per_day[day] = new_acc;
+        num_of_tries_per_day[day] = 0;
+    }
+
+    double time;
+    std::string date;
+    for (auto const &ps : problem_statistics) {
+        auto const &time_per_try = ps.second->getTimePerTry();
+        auto const &date_per_try = ps.second->getDatePerTry();
+        for (auto const &time_date : boost::combine(time_per_try, date_per_try)) {
+            boost::tie(time, date) = time_date;
+            auto const pdate = ptimeFromString(date);
+            auto const day = getDayOfWeek(pdate);
+
+            time_per_day[day](time);
+            num_of_tries_per_day[day]++;
+        }
+    }
+
+    double min = 0;
+    double max = 0;
+    std::map<std::string, double> value_time_per_day;
+    for (auto const &day : days_of_the_week) {
+        if (num_of_tries_per_day[day] > min_tries_threshold) {
+            auto const value = median(time_per_day[day]);
+
+            value_time_per_day[day] = value;
+
+            min = (min == 0 || min > value) ? value : min;
+            max = max < value ? value : max;
+        } else {
+            value_time_per_day[day] = 0.0;
+        }
+    }
+
+    for (auto const &day : days_of_the_week) {
+        if (num_of_tries_per_day[day] < min_tries_threshold) {
+            continue;
+        }
+
+        std::cout << day << ": ";
+
+        auto const value = value_time_per_day[day];
+        auto const total_tries = num_of_tries_per_day[day];
+        auto const width = (value - min) / (max - min) * bar_width;
+        for (unsigned int i = 0; i < width; i++) {
+            std::cout << "-";
+        }
+        std::cout << "| (" << value << "/" << total_tries << ")" << std::endl;
+    }
 }
 
 void Statistics::printSpeedProblemPerHour() {
     auto const min_tries_threshold = 10;
 
-    std::vector<double> time_per_hour;
-    std::vector<unsigned int> num_of_tries_per_hour;
+    using acc = accumulator_set<double, features<tag::mean, tag::median, tag::count>>;
 
-    time_per_hour.resize(24);
-    num_of_tries_per_hour.resize(24);
+    std::vector<acc> acc_per_hour;
+    acc_per_hour.resize(24);
 
     double time;
     std::string date;
@@ -186,33 +247,30 @@ void Statistics::printSpeedProblemPerHour() {
             auto const pdate = ptimeFromString(date);
             auto const hour = getHourOfDay(pdate);
 
-            time_per_hour.at(hour) += time;
-            num_of_tries_per_hour.at(hour)++;
+            acc_per_hour.at(hour)(time);
         }
     }
 
-    std::vector<double> mean_per_hour;
+    std::vector<double> value_per_hour;
     float min = 0;
     float max = 0;
     for (unsigned int hour = 0; hour < 24; hour++) {
-        auto const total_time = time_per_hour.at(hour);
-        auto const total_tries = num_of_tries_per_hour.at(hour);
+        auto const total_tries = boost::accumulators::count(acc_per_hour.at(hour));
 
         if (total_tries > min_tries_threshold) {
-            auto const mean = total_time / total_tries;
-            mean_per_hour.push_back(mean);
+            auto const value = median(acc_per_hour.at(hour));
+            value_per_hour.push_back(value);
 
-
-            min = (min == 0 || min > mean) ? mean : min;
-            max = (max < mean) ? mean : max;
+            min = (min == 0 || min > value) ? value : min;
+            max = (max < value) ? value : max;
         } else {
-            mean_per_hour.push_back(0);
+            value_per_hour.push_back(0);
         }
     }
 
     for (unsigned int hour = 0; hour < 24; hour++) {
-        auto const mean_time = mean_per_hour.at(hour);
-        auto const total_tries = num_of_tries_per_hour.at(hour);
+        auto const value_time = value_per_hour.at(hour);
+        auto const total_tries = boost::accumulators::count(acc_per_hour.at(hour));
 
         if (total_tries < min_tries_threshold) {
             continue;
@@ -220,11 +278,11 @@ void Statistics::printSpeedProblemPerHour() {
 
         std::cout << format("%-2i:00-%-2i:00: ") % hour % (hour + 1);
 
-        auto const width = (mean_time - min) / (max - min) * bar_width;
+        auto const width = (value_time - min) / (max - min) * bar_width;
         for (unsigned int i = 0; i < width; i++) {
             std::cout << "-";
         }
-        std::cout << "| (" << mean_time << "/" << total_tries << ")"
+        std::cout << "| (" << value_time << "/" << total_tries << ")"
             << std::endl;
     }
 }

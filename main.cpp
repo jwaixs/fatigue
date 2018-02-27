@@ -14,20 +14,25 @@ int main(int argc, char **argv) {
     string result_per_question_csv;
     unsigned int number_of_questions;
     bool do_problem_quiz, do_memory_quiz;
+    bool display_median, display_mean;
 
     options_description desc("Allowed options");
     desc.add_options()
         ("help,h", "Print help usage.")
-        ("stats,s", "Display statistics of quizes.")
         ("result-csv,f", value(&result_csv), "Result csv output file.")
         ("result-per-question-csv,g", value(&result_per_question_csv),
             "Result per question csv output file.")
-        ("number-of-questions,n", value(&number_of_questions)->default_value(5),
-            "Number of questions. (default: 5)")
         ("problem-quiz,p", bool_switch(&do_problem_quiz)->default_value(false),
             "Do the problem quiz.")
         ("memory-quiz,m", bool_switch(&do_memory_quiz)->default_value(false),
-            "Do the memory quiz.");
+            "Do the memory quiz.")
+        ("number-of-questions,n", value(&number_of_questions)->default_value(5),
+            "Number of questions. (default: 5)")
+        ("stats,s", "Display statistics of quizes.")
+        ("display-mean", bool_switch(&display_median)->default_value(false),
+            "Display mean values for stats per hour and day.")
+        ("display-median", bool_switch(&display_mean)->default_value(false),
+            "Display median values for stats per hour and day.");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
@@ -42,11 +47,20 @@ int main(int argc, char **argv) {
     if (vm.count("stats") || vm.count("s")) {
         Statistics stats(result_per_question_csv);
 
-        std::cout << "Speed problem histogram:" << std::endl;
+        std::cout << "Speed problem histogram (num of tries):" << std::endl;
         stats.printProblemMeanHistogram();
 
-        std::cout << "Speed problem per hour:" << std::endl;
-        stats.printSpeedProblemPerHour();
+        if (display_median) {
+            std::cout << std::endl
+                << "Speed problem per hour (median / num of tries):" << std::endl;
+            stats.printSpeedProblemPerHour();
+        }
+
+        if (display_median) {
+            std::cout << std::endl
+                << "Speed problem per day (median / num of tries):" << std::endl;
+            stats.printSpeedProblemPerDay();
+        }
 
         return 0;
     }
