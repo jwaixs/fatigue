@@ -82,6 +82,32 @@ double ProblemStats::getStd() {
     return sqrt(variance(acc));
 }
 
+MemoryStats::MemoryStats(string const p, string const a) {
+    problem = p;
+    answer = a;
+}
+
+string const MemoryStats::getProblem() {
+    return problem;
+}
+
+string const MemoryStats::getAnswer() {
+    return answer;
+}
+
+void MemoryStats::addTry(unsigned int const correct, string const date) {
+    correct_per_try.push_back(correct);
+    date_per_try.push_back(date);
+}
+
+vector<unsigned int> MemoryStats::getCorrectPerTry() {
+    return correct_per_try;
+}
+
+vector<string> MemoryStats::getDatePerTry() {
+    return date_per_try;
+}
+
 Statistics::Statistics(string csv_path) {
     readCSV(csv_path);
 }
@@ -309,5 +335,15 @@ void Statistics::printSpeedProblemPerHour(StatsType const &stats_type) {
         }
         std::cout << "| (" << value_time << "/" << total_tries << ")"
             << std::endl;
+    }
+}
+
+void Statistics::printSpeedProblemPerProblem() {
+    for (auto const &sp : problem_statistics) {
+        std::cout << format("%-5s %-4f %-4f %i")
+            % sp.first
+            % sp.second->getMean()
+            % sp.second->getMedian()
+            % sp.second->getNumberOfTries() << std::endl;
     }
 }

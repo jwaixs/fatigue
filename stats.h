@@ -36,17 +36,35 @@ private:
     accumulator_set<double, features<tag::mean, tag::median, tag::variance>> acc;
 };
 
+class MemoryStats {
+public:
+    MemoryStats(string const, string const);
+    string const getProblem();
+    string const getAnswer();
+    void addTry(unsigned int const, string const);
+    vector<unsigned int> getCorrectPerTry();
+    vector<string> getDatePerTry();
+private:
+    string problem;
+    string answer;
+    vector<unsigned int> correct_per_try;
+    vector<string> date_per_try;
+};
+
 class Statistics {
 public:
     Statistics(string);
     void readCSV(string);
+    void readMemoryCSV(string const);
     void printProblemMeanHistogram();
     void printSpeedProblemPerHour();
     void printSpeedProblemPerHour(StatsType const &);
     void printSpeedProblemPerDay();
     void printSpeedProblemPerDay(StatsType const &);
+    void printSpeedProblemPerProblem();
 private:
     map<string, ProblemStats *> problem_statistics;
+    map<string, MemoryStats *> memory_statistics;
     unsigned short const bar_width = 60;
 };
 

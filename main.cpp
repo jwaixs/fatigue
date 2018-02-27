@@ -16,6 +16,7 @@ int main(int argc, char **argv) {
     unsigned int number_of_questions;
     bool do_problem_quiz, do_memory_quiz;
     bool display_median, display_mean;
+    bool display_individual;
 
     options_description desc("Allowed options");
     desc.add_options()
@@ -33,7 +34,9 @@ int main(int argc, char **argv) {
         ("display-mean", bool_switch(&display_median)->default_value(false),
             "Display mean values for stats per hour and day.")
         ("display-median", bool_switch(&display_mean)->default_value(false),
-            "Display median values for stats per hour and day.");
+            "Display median values for stats per hour and day.")
+        ("display-individual", bool_switch(&display_individual)->default_value(false),
+            "Display each problem individually");
 
     variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
@@ -71,6 +74,11 @@ int main(int argc, char **argv) {
             std::cout << std::endl
                 << "Speed problem per day (mean / num of tries):" << std::endl;
             stats.printSpeedProblemPerDay(StatsType::Mean);
+        }
+
+        if (display_individual) {
+            std::cout << std::endl << "Speed problem per problem:" << std::endl;
+            stats.printSpeedProblemPerProblem();
         }
 
         return 0;
