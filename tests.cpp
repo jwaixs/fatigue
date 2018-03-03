@@ -8,6 +8,7 @@
 #include "memory_problem.h"
 #include "stats.h"
 #include "tools.h"
+#include "ks_test.h"
 
 // Floating point tolerance. I don't know how to get unit_test::tolerance
 // working. Hence I test it myself.
@@ -199,4 +200,44 @@ BOOST_AUTO_TEST_CASE(time_tools) {
             "Current minutes should be 9.");
     BOOST_CHECK_MESSAGE(current_time.seconds() == 1,
             "Current seconds should be 1.");
+}
+
+BOOST_AUTO_TEST_CASE(cumulative_function) {
+    std::vector<float> const data0;
+    auto cf0 = CumulativeFunction(data0);
+
+    for (unsigned int i = 0; i <= 9; i++) {
+        BOOST_CHECK_MESSAGE(std::abs(cf0(i) - 0) < tolerance,
+            "Cumulative function with no data should always be zero.");
+    }
+
+    std::vector<float> const data1{1.0};
+    auto cf1 = CumulativeFunction(data1);
+
+    BOOST_CHECK_MESSAGE(std::abs(cf1(0) - 0) < tolerance,
+            "Cumulative function below data should be zero.");
+    BOOST_CHECK_MESSAGE(std::abs(cf1(1) - 1) < tolerance,
+            "Cumulative function equal or above data should be one.");
+
+    std::vector<float> const data2{4.0, 5.0, 2.0, 2.0, 1.0,
+                                  6.0, 6.0, 6.0, 7.0, 8.0};
+
+    auto cf2 = CumulativeFunction(data2);
+
+    std::vector<float> const result{0.0, 0.1, 0.3, 0.3, 0.4, 0.5,
+                                    0.8, 0.9, 1.0, 1.0};
+    for (unsigned int i = 0; i <= 9; i++) {
+        BOOST_CHECK_MESSAGE(std::abs(cf2(i) - result.at(i)) < tolerance,
+            "Cumulative function should output correct results.");
+    }
+
+
+    auto const cf2_step_positions = cf2.getStepPositions();
+    auto const correct_step_positions = std::vector<float>{
+                                    1.0, 2.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+    for (unsigned int i = 0; i < cf2_step_positions.size(); i++) {
+        BOOST_CHECK_MESSAGE(
+            std::abs(cf2_step_positions.at(i) - correct_step_positions.at(i)) < tolerance,
+            "Cumulative function step positions should be correct.");
+    }
 }

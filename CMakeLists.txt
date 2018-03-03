@@ -10,6 +10,7 @@ find_package(Boost REQUIRED COMPONENTS program_options system filesystem
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(tools tools.cpp ${Boost_LIBRARIES})
+add_library(ks_test ks_test.cpp)
 add_library(memory_problem memory_problem.cpp)
 add_library(memory_quiz memory_quiz.cpp)
 target_link_libraries(memory_quiz memory_problem tools ${Boost_LIBRARIES})
@@ -22,4 +23,5 @@ add_executable(main main.cpp)
 target_link_libraries(main ${Boost_LIBRARIES} memory_quiz speed_quiz stats)
 
 add_executable(tests tests.cpp)
-target_link_libraries(tests ${Boost_LIBRARIES} memory_problem speed_problem stats tools)
+target_link_libraries(tests ${Boost_LIBRARIES} memory_problem speed_problem stats
+                            tools ks_test)
