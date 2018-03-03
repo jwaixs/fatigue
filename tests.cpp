@@ -241,3 +241,26 @@ BOOST_AUTO_TEST_CASE(cumulative_function) {
             "Cumulative function step positions should be correct.");
     }
 }
+
+BOOST_AUTO_TEST_CASE(two_sample_Kolmogorov_Smirnov_test) {
+    auto const d1 = std::vector<float>{0.1, 0.2, 0.3, 0.4, 0.5};
+    auto const d2 = std::vector<float>{-2, -1, 0, 1};
+    TwoSampleKSTest ks_test(d1, d2);
+
+    auto const twodigit = 0.01;
+
+    // Taken from the wiki:
+    //   https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test
+    BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.1) - 1.22) < twodigit,
+        "c(0.1) should be 1.22.");
+    BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.05) - 1.36) < twodigit,
+        "c(0.05) should be 1.36.");
+    BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.025) - 1.48) < twodigit,
+        "c(0.025) should be 1.48.");
+    BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.01) - 1.63) < twodigit,
+        "c(0.01) should be 1.63.");
+    BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.005) - 1.73) < twodigit,
+        "c(0.005) should be 1.73.");
+    BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.001) - 1.95) < twodigit,
+        "c(0.001) should be 1.95.");
+}
