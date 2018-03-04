@@ -1,10 +1,11 @@
-#include <deque>
-using namespace std;
-
-#include "speed_problem.h"
-
 #ifndef SPEED_QUIZ_H
 #define SPEED_QUIZ_H
+
+#include <deque>
+#include <string>
+#include <vector>
+
+#include "speed_problem.h"
 
 using namespace std;
 
