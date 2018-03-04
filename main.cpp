@@ -99,15 +99,15 @@ int main(int argc, char **argv) {
 
         if (vm.count("results-csv") > 0 || vm.count("f") > 0) {
             speed_quiz.writeResults(result_csv);
-        } else {
-            cout << "result-csv is not set, not saving results." << endl;
         }
 
         if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
             auto const pvalue = speed_quiz.zeroHypothesis(
                     result_per_question_csv);
-            cout << "Null hypothesis can be rejected with p-value "
-                << pvalue << "." << endl;
+            if (pvalue < 1.0) {
+                cout << "Null hypothesis can be rejected with p-value "
+                    << pvalue << "." << endl;
+            }
             speed_quiz.writeResultsPerQuestion(result_per_question_csv);
         } else {
             cout << "result-per-question-csv is not set, not saving results." << endl;
