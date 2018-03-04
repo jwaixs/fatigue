@@ -31,9 +31,9 @@ int main(int argc, char **argv) {
         ("number-of-questions,n", value(&number_of_questions)->default_value(5),
             "Number of questions. (default: 5)")
         ("stats,s", "Display statistics of quizes.")
-        ("display-mean", bool_switch(&display_median)->default_value(false),
+        ("display-mean", bool_switch(&display_mean)->default_value(false),
             "Display mean values for stats per hour and day.")
-        ("display-median", bool_switch(&display_mean)->default_value(false),
+        ("display-median", bool_switch(&display_median)->default_value(false),
             "Display median values for stats per hour and day.")
         ("display-individual", bool_switch(&display_individual)->default_value(false),
             "Display each problem individually");
