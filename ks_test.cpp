@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <cmath>
 
-CumulativeFunction::CumulativeFunction(std::vector<float> data) {
+template <typename T>
+CumulativeFunction<T>::CumulativeFunction(std::vector<T> data) {
     std::sort(data.begin(), data.end());
     auto const N = data.size();
     for (unsigned int i = 0; i < data.size(); i++) {
@@ -12,13 +13,15 @@ CumulativeFunction::CumulativeFunction(std::vector<float> data) {
     }
 }
 
-void CumulativeFunction::printFunction() {
+template <typename T>
+void CumulativeFunction<T>::printFunction() {
     for (auto const &cd : cumulative_data) {
         std::cout << cd.first << " " << cd.second << std::endl;
     }
 }
 
-float CumulativeFunction::operator()(float const &x) {
+template <typename T>
+float CumulativeFunction<T>::operator()(T const &x) {
     float result = 0.0;
     for (auto const &cd : cumulative_data) {
         if (cd.first > x) {
@@ -29,27 +32,39 @@ float CumulativeFunction::operator()(float const &x) {
     return result;
 }
 
-std::vector<float> CumulativeFunction::getStepPositions() {
-    std::vector<float> step_positions;
+template <typename T>
+std::vector<T> CumulativeFunction<T>::getStepPositions() {
+    std::vector<T> step_positions;
     for (auto const &cd : cumulative_data) {
         step_positions.push_back(cd.first);
     }
     return step_positions;
 }
 
+// Explicitly instantiate the template for CumulativeFunction.
+template class CumulativeFunction<float>;
+template class CumulativeFunction<double>;
+template class CumulativeFunction<unsigned int>;
+template class CumulativeFunction<int>;
+template class CumulativeFunction<unsigned long>;
+template class CumulativeFunction<long>;
 
-TwoSampleKSTest::TwoSampleKSTest(
-        std::vector<float> const &d1,
-        std::vector<float> const &d2) : cf1(d1), cf2(d2) {
+
+template <typename T>
+TwoSampleKSTest<T>::TwoSampleKSTest(
+        std::vector<T> const &d1,
+        std::vector<T> const &d2) : cf1(d1), cf2(d2) {
     n1 = d1.size();
     n2 = d2.size();
 }
 
-float TwoSampleKSTest::c(float const alpha) {
+template <typename T>
+float TwoSampleKSTest<T>::c(float const alpha) {
     return std::sqrt(-0.5 * std::log(alpha / 2));
 }
 
-float TwoSampleKSTest::getDistributionDifference() {
+template <typename T>
+float TwoSampleKSTest<T>::getDistributionDifference() {
     float max_diff = 0.0;
 
     for (auto const &x : cf1.getStepPositions()) {
@@ -68,18 +83,29 @@ float TwoSampleKSTest::getDistributionDifference() {
     return max_diff;
 }
 
-bool TwoSampleKSTest::doesRejectAt(float const alpha) {
+template <typename T>
+bool TwoSampleKSTest<T>::doesRejectAt(float const alpha) {
     auto const M = std::sqrt(static_cast<float>(n1 + n2) / (n1*n2));
     auto const C = c(alpha);
     return getDistributionDifference() > C*M;
 }
 
-float TwoSampleKSTest::cinv(float const x) {
+template <typename T>
+float TwoSampleKSTest<T>::cinv(float const x) {
     return 2*std::exp(-2*x*x);
 }
 
-float TwoSampleKSTest::getpValue() {
+template <typename T>
+float TwoSampleKSTest<T>::getpValue() {
     auto const N = std::sqrt(static_cast<float>(n1*n2) / (n1 + n2));
     auto const D = getDistributionDifference();
     return cinv(D*N);
 }
+
+// Explicitly instantiate the template for TwoSampleKSTest.
+template class TwoSampleKSTest<float>;
+template class TwoSampleKSTest<double>;
+template class TwoSampleKSTest<int>;
+template class TwoSampleKSTest<unsigned int>;
+template class TwoSampleKSTest<long>;
+template class TwoSampleKSTest<unsigned long>;

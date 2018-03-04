@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(time_tools) {
 
 BOOST_AUTO_TEST_CASE(cumulative_function) {
     std::vector<float> const data0;
-    auto cf0 = CumulativeFunction(data0);
+    auto cf0 = CumulativeFunction<float>(data0);
 
     for (unsigned int i = 0; i <= 9; i++) {
         BOOST_CHECK_MESSAGE(std::abs(cf0(i) - 0) < tolerance,
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(cumulative_function) {
     }
 
     std::vector<float> const data1{1.0};
-    auto cf1 = CumulativeFunction(data1);
+    auto cf1 = CumulativeFunction<float>(data1);
 
     BOOST_CHECK_MESSAGE(std::abs(cf1(0) - 0) < tolerance,
             "Cumulative function below data should be zero.");
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(cumulative_function) {
     std::vector<float> const data2{4.0, 5.0, 2.0, 2.0, 1.0,
                                   6.0, 6.0, 6.0, 7.0, 8.0};
 
-    auto cf2 = CumulativeFunction(data2);
+    auto cf2 = CumulativeFunction<float>(data2);
 
     std::vector<float> const result{0.0, 0.1, 0.3, 0.3, 0.4, 0.5,
                                     0.8, 0.9, 1.0, 1.0};
@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE(cumulative_function) {
 BOOST_AUTO_TEST_CASE(two_sample_Kolmogorov_Smirnov_test) {
     auto const d1 = std::vector<float>{0.1, 0.2, 0.3, 0.4, 0.5};
     auto const d2 = std::vector<float>{-2, -1, 0, 1};
-    TwoSampleKSTest ks_test(d1, d2);
+    TwoSampleKSTest<float> ks_test(d1, d2);
 
     auto const twodigit = 0.01;
 

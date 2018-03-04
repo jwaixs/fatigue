@@ -4,26 +4,29 @@
 #include <vector>
 #include <map>
 
+template <typename T>
 class CumulativeFunction {
 public:
-    CumulativeFunction(std::vector<float>);
+    CumulativeFunction(std::vector<T>);
     void printFunction();
-    float operator()(float const &);
-    std::vector<float> getStepPositions();
+    float operator()(T const &);
+    std::vector<T> getStepPositions();
 private:
-    std::map<float, float> cumulative_data;
+    std::map<T, float> cumulative_data;
 };
 
+
+template <typename T>
 class TwoSampleKSTest {
 public:
-    TwoSampleKSTest(std::vector<float> const &, std::vector<float> const &);
+    TwoSampleKSTest(std::vector<T> const &, std::vector<T> const &);
     float c(float const);
     float cinv(float const);
     float getDistributionDifference();
     bool doesRejectAt(float const);
     float getpValue();
 private:
-    CumulativeFunction cf1, cf2;
+    CumulativeFunction<T> cf1, cf2;
     unsigned int n1, n2;
 };
 
