@@ -263,4 +263,32 @@ BOOST_AUTO_TEST_CASE(two_sample_Kolmogorov_Smirnov_test) {
         "c(0.005) should be 1.73.");
     BOOST_CHECK_MESSAGE(std::abs(ks_test.c(0.001) - 1.95) < twodigit,
         "c(0.001) should be 1.95.");
+
+    TwoSampleKSTest<float> ks_test_2(d1, d2);
+    BOOST_CHECK_MESSAGE(
+        std::abs(ks_test.getpValue() - ks_test_2.getpValue()) < tolerance,
+        "KS-test should be symmetric with respect to the input. "
+        + std::to_string(ks_test.getpValue()) + " vs. "
+        + std::to_string(ks_test_2.getpValue()) + ".");
+
+    /* According to R:
+     * > s1 <- c(0.1, 0.2, 0.3, 0.4, 0.5);
+     * > s2 <- c(-2, -1, 0, 1);
+     * > ks.test(s1, s2);
+     *
+     *  Two-sample Kolmogorov-Smirnov test
+     *
+     *  data:  s1 and s2
+     *  D = 0.75, p-value = 0.1429
+     *  alternative hypothesis: two-sided
+     *
+     *  QUESTION: Is this correct? If so, how is the p-value computed?
+     */
+    BOOST_CHECK_MESSAGE(
+        std::abs(ks_test.getDistributionDifference() - 0.75) < twodigit,
+        "Distribution difference should be 0.75.");
+    BOOST_CHECK_MESSAGE(
+        std::abs(ks_test.getpValue() - 0.14) < twodigit,
+        "KS-test should reject the null hypothesis with p-value 0.14. p-value: "
+        + std::to_string(ks_test.getpValue()) + ".");
 }
