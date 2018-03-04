@@ -5,8 +5,8 @@ using namespace std;
 #include <boost/program_options.hpp>
 using namespace boost::program_options;
 
-#include "speed_quiz.h"
 #include "memory_quiz.h"
+#include "speed_quiz.h"
 #include "stats.h"
 #include "stats_type.h"
 
@@ -104,6 +104,10 @@ int main(int argc, char **argv) {
         }
 
         if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
+            auto const pvalue = speed_quiz.zeroHypothesis(
+                    result_per_question_csv);
+            cout << "Null hypothesis can be rejected with p-value "
+                << pvalue << "." << endl;
             speed_quiz.writeResultsPerQuestion(result_per_question_csv);
         } else {
             cout << "result-per-question-csv is not set, not saving results." << endl;

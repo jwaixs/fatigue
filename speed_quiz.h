@@ -17,6 +17,7 @@ public:
     void stopQuiz();
     void writeResults(string);
     void writeResultsPerQuestion(string);
+    float zeroHypothesis(string const &);
 private:
     double totalTime();
     void initQuiz(unsigned int);

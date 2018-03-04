@@ -1,14 +1,16 @@
+#include <chrono>
+#include <fstream>
+#include <functional>
+#include <iomanip>
 #include <iostream>
 #include <random>
-#include <functional>
-#include <fstream>
-#include <chrono>
-#include <iomanip>
 #include <string>
 
 #include <boost/filesystem.hpp>
 
+#include "ks_test.h"
 #include "speed_quiz.h"
+#include "stats.h"
 #include "tools.h"
 
 using namespace std;
@@ -95,6 +97,28 @@ void SpeedQuiz::stopQuiz() {
                 << ", " << p.getTimeToSolve() << endl;
         }
     }
+}
+
+vector<float> SpeedQuiz::getSpeedData() {
+    vector<float> speed_data;
+
+    for (auto &p : correct_answers) {
+        speed_data.push_back(p.getTimeToSolve());
+    }
+
+    return speed_data;
+}
+
+float SpeedQuiz::zeroHypothesis(string const &csv_path) {
+    Statistics speed_stats;
+    speed_stats.readSpeedCSV(csv_path);
+
+    auto const ground_truth_data = speed_stats.getSpeedData();
+    auto const quiz_speed_data = getSpeedData();
+
+    TwoSampleKSTest<float> ttest(ground_truth_data, quiz_speed_data);
+
+    return ttest.getpValue();
 }
 
 void SpeedQuiz::writeResults(string filename) {
