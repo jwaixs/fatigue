@@ -11,6 +11,7 @@ public:
     void printFunction();
     float operator()(T const &);
     std::vector<T> getStepPositions();
+    unsigned int size();
 private:
     std::map<T, float> cumulative_data;
 };

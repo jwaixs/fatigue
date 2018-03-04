@@ -41,6 +41,11 @@ std::vector<T> CumulativeFunction<T>::getStepPositions() {
     return step_positions;
 }
 
+template <typename T>
+unsigned int CumulativeFunction<T>::size() {
+    return cumulative_data.size();
+}
+
 // Explicitly instantiate the template for CumulativeFunction.
 template class CumulativeFunction<float>;
 template class CumulativeFunction<double>;
@@ -54,8 +59,8 @@ template <typename T>
 TwoSampleKSTest<T>::TwoSampleKSTest(
         std::vector<T> const &d1,
         std::vector<T> const &d2) : cf1(d1), cf2(d2) {
-    n1 = d1.size();
-    n2 = d2.size();
+    n1 = cf1.size();
+    n2 = cf2.size();
 }
 
 template <typename T>
