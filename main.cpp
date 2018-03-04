@@ -49,7 +49,8 @@ int main(int argc, char **argv) {
     }
 
     if (vm.count("stats") || vm.count("s")) {
-        Statistics stats(result_per_question_csv);
+        Statistics stats;
+        stats.readSpeedCSV(result_per_question_csv);
 
         std::cout << "Speed problem histogram (num of tries):" << std::endl;
         stats.printProblemMeanHistogram();

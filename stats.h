@@ -53,9 +53,8 @@ private:
 
 class Statistics {
 public:
-    Statistics(string);
-    void readCSV(string);
-    void readMemoryCSV(string const);
+    void readSpeedCSV(string const &);
+    void readMemoryCSV(string const &);
     void printProblemMeanHistogram();
     void printSpeedProblemPerHour();
     void printSpeedProblemPerHour(StatsType const &);

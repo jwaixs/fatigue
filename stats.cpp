@@ -108,11 +108,7 @@ vector<string> MemoryStats::getDatePerTry() {
     return date_per_try;
 }
 
-Statistics::Statistics(string csv_path) {
-    readCSV(csv_path);
-}
-
-void Statistics::readCSV(string csv_path) {
+void Statistics::readSpeedCSV(string const &csv_path) {
     ifstream csv;
     csv.open(csv_path.c_str());
 
