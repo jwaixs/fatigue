@@ -343,3 +343,16 @@ void Statistics::printSpeedProblemPerProblem() {
             % sp.second->getNumberOfTries() << std::endl;
     }
 }
+
+std::vector<float> Statistics::getSpeedData() {
+    std::vector<float> speed_data;
+
+    for (auto const &ps : problem_statistics) {
+        auto const &time_per_try = ps.second->getTimePerTry();
+        for (auto const &t : time_per_try) {
+            speed_data.push_back(t);
+        }
+    }
+
+    return speed_data;
+}

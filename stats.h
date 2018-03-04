@@ -61,6 +61,7 @@ public:
     void printSpeedProblemPerDay();
     void printSpeedProblemPerDay(StatsType const &);
     void printSpeedProblemPerProblem();
+    std::vector<float> getSpeedData();
 private:
     map<string, ProblemStats *> problem_statistics;
     map<string, MemoryStats *> memory_statistics;

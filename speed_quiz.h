@@ -27,6 +27,7 @@ private:
     unsigned int start;
     unsigned int stop;
     bool ran;
+    vector<float> getSpeedData();
 };
 
 #endif // SPEED_QUIZ_H
