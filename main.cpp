@@ -30,7 +30,8 @@ int main(int argc, char **argv) {
             "Do the memory quiz.")
         ("number-of-questions,n", value(&number_of_questions)->default_value(5),
             "Number of questions. (default: 5)")
-        ("stats,s", "Display statistics of quizes.")
+        ("stats-speed,s", "Display statistics of speed quizes.")
+        ("stats-memory,t", "Display statistics of memory quizes.")
         ("display-mean", bool_switch(&display_mean)->default_value(false),
             "Display mean values for stats per hour and day.")
         ("display-median", bool_switch(&display_median)->default_value(false),
@@ -48,7 +49,7 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    if (vm.count("stats") || vm.count("s")) {
+    if (vm.count("stats-speed") || vm.count("s")) {
         Statistics stats;
         stats.readSpeedCSV(result_per_question_csv);
 
@@ -81,6 +82,17 @@ int main(int argc, char **argv) {
             std::cout << std::endl << "Speed problem per problem:" << std::endl;
             stats.printSpeedProblemPerProblem();
         }
+
+        return 0;
+    }
+
+    if (vm.count("stats-memory") || vm.count("t")) {
+        Statistics stats;
+        stats.readMemoryCSV(result_per_question_csv);
+
+        std::cout << std::endl << "Memory problem histogram (num of tries):"
+            << std::endl;
+        stats.printMemoryHistogram();
 
         return 0;
     }

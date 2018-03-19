@@ -38,17 +38,16 @@ private:
 
 class MemoryStats {
 public:
-    MemoryStats(string const, string const);
+    MemoryStats(string const &, string const &, string const &, unsigned int);
     string const getProblem();
     string const getAnswer();
-    void addTry(unsigned int const, string const);
-    vector<unsigned int> getCorrectPerTry();
-    vector<string> getDatePerTry();
+    string const getDate();
+    unsigned int const getCorrect();
 private:
     string problem;
     string answer;
-    vector<unsigned int> correct_per_try;
-    vector<string> date_per_try;
+    string date;
+    unsigned int correct;
 };
 
 class Statistics {
@@ -56,6 +55,7 @@ public:
     void readSpeedCSV(string const &);
     void readMemoryCSV(string const &);
     void printProblemMeanHistogram();
+    void printMemoryHistogram();
     void printSpeedProblemPerHour();
     void printSpeedProblemPerHour(StatsType const &);
     void printSpeedProblemPerDay();
@@ -64,7 +64,7 @@ public:
     std::vector<float> getSpeedData();
 private:
     map<string, ProblemStats *> problem_statistics;
-    map<string, MemoryStats *> memory_statistics;
+    std::vector<MemoryStats> memory_statistics;
     unsigned short const bar_width = 60;
 };
 

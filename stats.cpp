@@ -82,9 +82,12 @@ double ProblemStats::getStd() {
     return sqrt(variance(acc));
 }
 
-MemoryStats::MemoryStats(string const p, string const a) {
+MemoryStats::MemoryStats(string const &p, string const &a, string const &d,
+                         unsigned int c) {
     problem = p;
     answer = a;
+    date = d;
+    correct = c;
 }
 
 string const MemoryStats::getProblem() {
@@ -95,18 +98,14 @@ string const MemoryStats::getAnswer() {
     return answer;
 }
 
-void MemoryStats::addTry(unsigned int const correct, string const date) {
-    correct_per_try.push_back(correct);
-    date_per_try.push_back(date);
+string const MemoryStats::getDate() {
+    return date;
 }
 
-vector<unsigned int> MemoryStats::getCorrectPerTry() {
-    return correct_per_try;
+unsigned int const MemoryStats::getCorrect() {
+    return correct;
 }
 
-vector<string> MemoryStats::getDatePerTry() {
-    return date_per_try;
-}
 
 void Statistics::readSpeedCSV(string const &csv_path) {
     ifstream csv;
@@ -140,6 +139,37 @@ void Statistics::readSpeedCSV(string const &csv_path) {
         }
         problem_statistics[problem]->addTry(tries, time, date);
     }
+
+    csv.close();
+}
+
+void Statistics::readMemoryCSV(string const &csv_path) {
+    ifstream csv;
+    csv.open(csv_path.c_str());
+
+    typedef tokenizer<escaped_list_separator<char>> Tokenizer;
+    vector<string> svec;
+    string line;
+
+    // Get the header, and drop it.
+    getline(csv, line);
+
+    string data, problem, answer;
+    unsigned int correct;
+    while (getline(csv, line)) {
+        Tokenizer tok(line);
+        svec.assign(tok.begin(), tok.end());
+
+        data = svec.at(0);
+        problem = svec.at(1);
+        answer = svec.at(2);
+        correct = lexical_cast<unsigned int>(svec.at(3));
+
+        MemoryStats memory_stat(problem, answer, data, correct);
+        memory_statistics.push_back(memory_stat);
+    }
+
+    csv.close();
 }
 
 void Statistics::printProblemMeanHistogram() {
@@ -162,6 +192,13 @@ void Statistics::printProblemMeanHistogram() {
                                        time_per_question.end());
     auto const bin_length = (max - min) / bins;
 
+    if (max <= min) {
+        string const err_msg = "printProblemMeanHistogram(): maximum value "
+            "should be bigger than minimum value."
+            " !(" + std::to_string(max) + " > " + std::to_string(min) + ")";
+        throw std::runtime_error(err_msg);
+    }
+
     std::vector<int> histogram(bins+1);
     for (auto const time : time_per_question) {
         auto const which_bin = static_cast<int>((time - min) / bin_length);
@@ -177,6 +214,40 @@ void Statistics::printProblemMeanHistogram() {
         std::cout << format("%-4f - %-4f: ") % (min + i*bin_length) % (min + (i+1)*bin_length);
 
         unsigned int const hist_bar_size = (bar_width * histogram.at(i)) / hist_max_size;
+        for (unsigned int j = 0; j < hist_bar_size; j++) {
+            std::cout << "-";
+        }
+
+        std::cout << "| (" << histogram.at(i) << ")" << std::endl;
+    }
+}
+
+void Statistics::printMemoryHistogram() {
+    // Number of bins to show maximal in histogram.
+    auto const bins = 10;
+
+    // Maximum bin length.
+
+    std::vector<unsigned int> histogram(bins+1);
+    for (auto &ms : memory_statistics) {
+        auto hist_bin = ms.getCorrect();
+        histogram.at(hist_bin)++;
+    }
+
+    auto const min = 0;
+    auto const max = *std::max_element(histogram.begin(),
+                                       histogram.end());
+
+    if (!(max > min)) {
+        string const err_msg = "printmemoryHistogram(): maximum value is not "
+            "larger than minimum value."
+            "!(" + std::to_string(max) + " > " + std::to_string(min) + ")";
+        throw std::runtime_error(err_msg);
+    }
+
+    for (unsigned int i = 0; i <= bins; i++) {
+        std::cout << format("%-2i") % i << " correct : ";
+        unsigned int const hist_bar_size = (bar_width * histogram.at(i)) / max;
         for (unsigned int j = 0; j < hist_bar_size; j++) {
             std::cout << "-";
         }
