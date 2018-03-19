@@ -9,6 +9,7 @@ using namespace std;
 #include <boost/tokenizer.hpp>
 #include <boost/format.hpp>
 #include <boost/range/combine.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 using namespace boost;
 
 #include "stats.h"
@@ -413,6 +414,58 @@ void Statistics::printSpeedProblemPerProblem() {
             % sp.second->getMedian()
             % sp.second->getNumberOfTries() << std::endl;
     }
+}
+
+void Statistics::printSpeedProblemPerWeek(unsigned int const back) {
+    printSpeedProblemPerWeek(back, StatsType::Median);
+}
+
+void Statistics::printSpeedProblemPerWeek(unsigned int const back,
+                                          StatsType const &stats_type) {
+    using acc = accumulator_set<double, features<tag::mean, tag::median, tag::count>>;
+
+    auto const now_time = ptimeFromString(getCurrentTime());
+    auto const t = boost::posix_time::hours(7*24);
+    auto cur_time = now_time - boost::posix_time::hours(back*7*24);
+
+    double time;
+    std::string date;
+    for (unsigned int i = 0; i < back; i++) {
+        auto const cur_year = getYear(cur_time);
+        auto const cur_week = getWeek(cur_time);
+
+        acc cur_week_acc;
+        for (auto const &ps : problem_statistics) {
+            auto const &time_per_try = ps.second->getTimePerTry();
+            auto const &date_per_try = ps.second->getDatePerTry();
+            for (auto const &time_date : boost::combine(time_per_try, date_per_try)) {
+                boost::tie(time, date) = time_date;
+                auto const pdate = ptimeFromString(date);
+                auto const pweek = getWeek(pdate);
+                auto const pyear = getYear(pdate);
+
+                if (pweek == cur_week && pyear == cur_year) {
+                    cur_week_acc(time);
+                }
+            }
+        }
+
+        double value;
+        if (stats_type == StatsType::Median) {
+            value = median(cur_week_acc);
+        } else if (stats_type == StatsType::Mean) {
+            value = mean(cur_week_acc);
+        } else {
+            throw std::runtime_error("StatsType not implemented.");
+        }
+
+        std::cout << cur_year << " " << cur_week
+            << " " << boost::accumulators::count(cur_week_acc)
+            << " " << value << std::endl;
+
+        cur_time += t;
+    }
+
 }
 
 std::vector<float> Statistics::getSpeedData() {

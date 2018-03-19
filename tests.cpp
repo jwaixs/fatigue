@@ -192,6 +192,9 @@ BOOST_AUTO_TEST_CASE(time_tools) {
             "getMonth should be Feb.");
     BOOST_CHECK_MESSAGE(getHourOfDay(current_ptime) == 11,
             "getHourOfDay should be 11.");
+    BOOST_CHECK_MESSAGE(getWeek(current_ptime) == 8, "getWeek should be 8.");
+    BOOST_CHECK_MESSAGE(getYear(current_ptime) == 2018,
+            "getYear should be 2018.");
 
     auto const current_time = current_ptime.time_of_day();
     BOOST_CHECK_MESSAGE(current_time.hours() == 11,

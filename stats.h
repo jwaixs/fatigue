@@ -61,6 +61,8 @@ public:
     void printSpeedProblemPerDay();
     void printSpeedProblemPerDay(StatsType const &);
     void printSpeedProblemPerProblem();
+    void printSpeedProblemPerWeek(unsigned int const);
+    void printSpeedProblemPerWeek(unsigned int const, StatsType const &);
     std::vector<float> getSpeedData();
 private:
     map<string, ProblemStats *> problem_statistics;

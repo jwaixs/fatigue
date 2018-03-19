@@ -83,6 +83,8 @@ int main(int argc, char **argv) {
             stats.printSpeedProblemPerProblem();
         }
 
+        stats.printSpeedProblemPerWeek(52);
+
         return 0;
     }
 
