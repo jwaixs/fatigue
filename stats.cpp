@@ -423,6 +423,7 @@ void Statistics::printSpeedProblemPerWeek(unsigned int const back) {
 void Statistics::printSpeedProblemPerWeek(unsigned int const back,
                                           StatsType const &stats_type) {
     using acc = accumulator_set<double, features<tag::mean, tag::median, tag::count>>;
+    std::vector<std::pair<boost::posix_time::ptime, acc>> results_per_week;
 
     auto const now_time = ptimeFromString(getCurrentTime());
     auto const t = boost::posix_time::hours(7*24);
@@ -450,20 +451,30 @@ void Statistics::printSpeedProblemPerWeek(unsigned int const back,
             }
         }
 
+        results_per_week.push_back(std::pair<boost::posix_time::ptime, acc>{
+            cur_time, cur_week_acc
+        });
+
+        cur_time += t;
+    }
+
+    for (auto const &pta : results_per_week) {
+        auto const cur_year = getYear(pta.first);
+        auto const cur_week = getWeek(pta.first);
+        auto const num_tries = boost::accumulators::count(pta.second);
+
         double value;
         if (stats_type == StatsType::Median) {
-            value = median(cur_week_acc);
+            value = median(pta.second);
         } else if (stats_type == StatsType::Mean) {
-            value = mean(cur_week_acc);
+            value = mean(pta.second);
         } else {
             throw std::runtime_error("StatsType not implemented.");
         }
 
-        std::cout << cur_year << " " << cur_week
-            << " " << boost::accumulators::count(cur_week_acc)
-            << " " << value << std::endl;
+        std::cout << cur_year << " " << cur_week << " " << num_tries
+                  << " " << value << std::endl;
 
-        cur_time += t;
     }
 
 }

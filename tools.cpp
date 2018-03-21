@@ -42,3 +42,8 @@ unsigned short getWeek(boost::posix_time::ptime const &ptime) {
 unsigned short getYear(boost::posix_time::ptime const &ptime) {
     return ptime.date().year();
 }
+
+
+void print_histogram(std::vector<std::string, double, unsigned int> hist_data) {
+    std::cout << "bla" << std::endl;
+}
