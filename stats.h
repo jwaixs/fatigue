@@ -42,7 +42,7 @@ public:
     string const getProblem();
     string const getAnswer();
     string const getDate();
-    unsigned int const getCorrect();
+    unsigned int getCorrect();
 private:
     string problem;
     string answer;

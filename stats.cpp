@@ -103,7 +103,7 @@ string const MemoryStats::getDate() {
     return date;
 }
 
-unsigned int const MemoryStats::getCorrect() {
+unsigned int MemoryStats::getCorrect() {
     return correct;
 }
 
