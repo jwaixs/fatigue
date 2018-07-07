@@ -1,17 +1,18 @@
-#include <string>
-using namespace std;
+// Copyright 2018 Noud Aldenhoven
 
-#ifndef MEMORY_H
-#define MEMORY_H
+#include <string>
+
+#ifndef MEMORY_PROBLEM_H_
+#define MEMORY_PROBLEM_H_
 
 class MemoryProblem {
  public:
-  MemoryProblem(string const p);
-  string getMemoryProblem();
-  unsigned int correctNumber(string const answer);
+  explicit MemoryProblem(std::string const p);
+  std::string getMemoryProblem();
+  unsigned int correctNumber(std::string const answer);
 
  private:
-  string memory_problem;
+  std::string memory_problem;
 };
 
-#endif /* MEMORY_H */
+#endif  // MEMORY_PROBLEM_H_

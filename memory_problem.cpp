@@ -1,14 +1,18 @@
-#include "memory_problem.h"
+// Copyright 2018 Noud Aldenhoven
 
-MemoryProblem::MemoryProblem(string const p) { memory_problem = p; }
+#include <algorithm>
 
-string MemoryProblem::getMemoryProblem() { return memory_problem; }
+#include "./memory_problem.h"
 
-unsigned int MemoryProblem::correctNumber(string const answer) {
+MemoryProblem::MemoryProblem(std::string const p) { memory_problem = p; }
+
+std::string MemoryProblem::getMemoryProblem() { return memory_problem; }
+
+unsigned int MemoryProblem::correctNumber(std::string const answer) {
   unsigned int correct = 0;
 
-  for (unsigned int i = 0; i < min(memory_problem.length(), answer.length());
-       i++) {
+  for (unsigned int i = 0;
+       i < std::min(memory_problem.length(), answer.length()); i++) {
     if (answer[i] == memory_problem[i]) {
       correct++;
     }

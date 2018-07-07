@@ -1,18 +1,23 @@
+// Copyright 2018 Noud Aldenhoven
+
 #include <iostream>
 #include <string>
-using namespace std;
 
 #include <boost/program_options.hpp>
-using namespace boost::program_options;
+using boost::program_options::bool_switch;
+using boost::program_options::notify;
+using boost::program_options::options_description;
+using boost::program_options::value;
+using boost::program_options::variables_map;
 
-#include "memory_quiz.h"
-#include "speed_quiz.h"
-#include "stats.h"
-#include "stats_type.h"
+#include "./memory_quiz.h"
+#include "./speed_quiz.h"
+#include "./stats.h"
+#include "./stats_type.h"
 
 int main(int argc, char **argv) {
-  string result_csv;
-  string result_per_question_csv;
+  std::string result_csv;
+  std::string result_per_question_csv;
   unsigned int number_of_questions;
   bool do_problem_quiz, do_memory_quiz;
   bool display_median, display_mean;
@@ -44,8 +49,9 @@ int main(int argc, char **argv) {
   notify(vm);
 
   if (vm.count("help") || vm.count("h")) {
-    cout << "Progam to measure your fatigueness doing a small quiz." << endl
-         << desc;
+    std::cout << "Progam to measure your fatigueness doing a small quiz."
+              << std::endl
+              << desc;
     return 0;
   }
 
@@ -102,14 +108,14 @@ int main(int argc, char **argv) {
   }
 
   if (do_problem_quiz && do_memory_quiz) {
-    cout << "Cannot do problem quiz and memory quiz at the same time."
-         << " Please select only one of the two options." << endl;
+    std::cout << "Cannot do problem quiz and memory quiz at the same time."
+              << " Please select only one of the two options." << std::endl;
   }
 
   if (do_problem_quiz) {
     SpeedQuiz speed_quiz(number_of_questions);
-    cout << "Press enter to start the problem quiz.";
-    cin.get();
+    std::cout << "Press enter to start the problem quiz.";
+    std::cin.get();
     speed_quiz.startQuiz();
     speed_quiz.stopQuiz();
 
@@ -120,26 +126,28 @@ int main(int argc, char **argv) {
     if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
       auto const pvalue = speed_quiz.zeroHypothesis(result_per_question_csv);
       if (pvalue < 1.0) {
-        cout << "Null hypothesis can be rejected with p-value " << pvalue << "."
-             << endl;
+        std::cout << "Null hypothesis can be rejected with p-value " << pvalue
+                  << "." << std::endl;
       }
       speed_quiz.writeResultsPerQuestion(result_per_question_csv);
     } else {
-      cout << "result-per-question-csv is not set, not saving results." << endl;
+      std::cout << "result-per-question-csv is not set, not saving results."
+                << std::endl;
     }
   }
 
   if (do_memory_quiz) {
     MemoryQuiz memory_quiz(number_of_questions, 1000);
-    cout << "Press enter to start the memory quiz.";
-    cin.get();
+    std::cout << "Press enter to start the memory quiz.";
+    std::cin.get();
     memory_quiz.startQuiz();
     memory_quiz.stopQuiz();
 
     if (vm.count("result-per-question-csv") > 0 || vm.count("g") > 0) {
       memory_quiz.writeResultsPerMemoryProblem(result_per_question_csv);
     } else {
-      cout << "result-per-question-csv is not set, not saving results." << endl;
+      std::cout << "result-per-question-csv is not set, not saving results."
+                << std::endl;
     }
   }
 

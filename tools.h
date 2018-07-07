@@ -1,18 +1,19 @@
-#ifndef TOOLS_H
-#define TOOLS_H
+// Copyright 2018 Noud Aldenhoven
+
+#ifndef TOOLS_H_
+#define TOOLS_H_
 
 #include <string>
-using namespace std;
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-string getCurrentTime();
-boost::posix_time::ptime ptimeFromString(string const &);
+std::string getCurrentTime();
+boost::posix_time::ptime ptimeFromString(std::string const &);
 
-string getDayOfWeek(boost::posix_time::ptime const &);
-unsigned short getHourOfDay(boost::posix_time::ptime const &);
-string getMonth(boost::posix_time::ptime const &);
-unsigned short getWeek(boost::posix_time::ptime const &);
-unsigned short getYear(boost::posix_time::ptime const &);
+std::string getDayOfWeek(boost::posix_time::ptime const &);
+uint8_t getHourOfDay(boost::posix_time::ptime const &);
+std::string getMonth(boost::posix_time::ptime const &);
+uint8_t getWeek(boost::posix_time::ptime const &);
+uint16_t getYear(boost::posix_time::ptime const &);
 
-#endif  // TOOLS_H
+#endif  // TOOLS_H_

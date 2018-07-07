@@ -1,4 +1,6 @@
-#include "ks_test.h"
+// Copyright 2018 Noud Aldenhoven
+
+#include "./ks_test.h"
 
 #include <algorithm>
 #include <cmath>
@@ -49,10 +51,10 @@ unsigned int CumulativeFunction<T>::size() {
 // Explicitly instantiate the template for CumulativeFunction.
 template class CumulativeFunction<float>;
 template class CumulativeFunction<double>;
-template class CumulativeFunction<unsigned int>;
-template class CumulativeFunction<int>;
-template class CumulativeFunction<unsigned long>;
-template class CumulativeFunction<long>;
+template class CumulativeFunction<int16_t>;
+template class CumulativeFunction<uint16_t>;
+template class CumulativeFunction<int64_t>;
+template class CumulativeFunction<uint64_t>;
 
 template <typename T>
 TwoSampleKSTest<T>::TwoSampleKSTest(std::vector<T> const &d1,
@@ -109,7 +111,7 @@ float TwoSampleKSTest<T>::getpValue() {
 // Explicitly instantiate the template for TwoSampleKSTest.
 template class TwoSampleKSTest<float>;
 template class TwoSampleKSTest<double>;
-template class TwoSampleKSTest<int>;
-template class TwoSampleKSTest<unsigned int>;
-template class TwoSampleKSTest<long>;
-template class TwoSampleKSTest<unsigned long>;
+template class TwoSampleKSTest<int16_t>;
+template class TwoSampleKSTest<uint16_t>;
+template class TwoSampleKSTest<int64_t>;
+template class TwoSampleKSTest<uint64_t>;

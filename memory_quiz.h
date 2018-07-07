@@ -1,12 +1,13 @@
+// Copyright 2018 Noud Aldenhoven
+
 #include <string>
 #include <tuple>
 #include <vector>
-using namespace std;
 
-#include "memory_problem.h"
+#include "./memory_problem.h"
 
-#ifndef MEMORY_QUIZ_H
-#define MEMORY_QUIZ_H
+#ifndef MEMORY_QUIZ_H_
+#define MEMORY_QUIZ_H_
 
 class MemoryQuiz {
  public:
@@ -16,15 +17,15 @@ class MemoryQuiz {
              unsigned int const nnumbers = 10);
   void startQuiz();
   void stopQuiz();
-  void writeResultsPerMemoryProblem(string);
+  void writeResultsPerMemoryProblem(std::string);
 
  private:
   void initQuiz(unsigned int const);
-  vector<MemoryProblem> question;
-  vector<tuple<MemoryProblem, string, unsigned int>> answers;
+  std::vector<MemoryProblem> question;
+  std::vector<std::tuple<MemoryProblem, std::string, unsigned int>> answers;
   unsigned int sleep_time_in_milliseconds;
   unsigned int number_of_numbers;
   bool ran;
 };
 
-#endif  // MEMORY_QUIZ_H
+#endif  // MEMORY_QUIZ_H_

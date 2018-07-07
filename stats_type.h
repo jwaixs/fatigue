@@ -1,6 +1,8 @@
-#ifndef STATS_TYPE_H
-#define STATS_TYPE_H
+// Copyright 2018 Noud Aldenhoven
+
+#ifndef STATS_TYPE_H_
+#define STATS_TYPE_H_
 
 enum class StatsType { Mean, Median };
 
-#endif /* STATS_TYPE_H */
+#endif  // STATS_TYPE_H_

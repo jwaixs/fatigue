@@ -1,25 +1,25 @@
+// Copyright 2018 Noud Aldenhoven
+
 #include <string>
 
-#ifndef SPEED_PROBLEM_H
-#define SPEED_PROBLEM_H
-
-using namespace std;
+#ifndef SPEED_PROBLEM_H_
+#define SPEED_PROBLEM_H_
 
 class SpeedProblem {
  public:
-  SpeedProblem(string const, string const);
-  string getProblem();
-  string getSolution();
-  bool isCorrect(string const);
+  SpeedProblem(std::string const, std::string const);
+  std::string getProblem();
+  std::string getSolution();
+  bool isCorrect(std::string const);
   void addTime(double);
   unsigned int getNumberOfTries();
   double getTimeToSolve();
 
  private:
-  string problem;
-  string solution;
+  std::string problem;
+  std::string solution;
   unsigned int number_of_tries;
   double time_to_solve;
 };
 
-#endif  // SPEED_PROBLEM_H
+#endif  // SPEED_PROBLEM_H_

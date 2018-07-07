@@ -1,3 +1,6 @@
+// Copyright 2018 Noud Aldenhoven
+
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -7,11 +10,8 @@
 
 #include <boost/filesystem.hpp>
 
-using namespace std;
-using namespace boost;
-
-#include "memory_quiz.h"
-#include "tools.h"
+#include "./memory_quiz.h"
+#include "./tools.h"
 
 MemoryQuiz::MemoryQuiz() { MemoryQuiz(5); }
 
@@ -25,14 +25,14 @@ MemoryQuiz::MemoryQuiz(unsigned int const number_of_problems,
 }
 
 void MemoryQuiz::initQuiz(unsigned int const number_of_problems) {
-  mt19937::result_type seed = time(0);
-  uniform_int_distribution<int> distribution(0, 9);
-  auto dice = bind(distribution, mt19937(seed));
+  std::mt19937::result_type seed = time(0);
+  std::uniform_int_distribution<int> distribution(0, 9);
+  auto dice = std::bind(distribution, std::mt19937(seed));
 
   for (unsigned int i = 0; i < number_of_problems; i++) {
-    string problem;
+    std::string problem;
     for (unsigned int j = 0; j < number_of_numbers; j++) {
-      problem += to_string(dice());
+      problem += std::to_string(dice());
     }
     MemoryProblem memory_problem(problem);
     question.push_back(memory_problem);
@@ -41,44 +41,47 @@ void MemoryQuiz::initQuiz(unsigned int const number_of_problems) {
 
 void MemoryQuiz::startQuiz() {
   for (auto &problem : question) {
-    cout << "> " << problem.getMemoryProblem();
-    cout.flush();
-    this_thread::sleep_for(chrono::milliseconds(sleep_time_in_milliseconds));
-    string blanks(problem.getMemoryProblem().size() + 2, ' ');
-    cout << "\r" << blanks << "\r> ";
+    std::cout << "> " << problem.getMemoryProblem();
+    std::cout.flush();
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds(sleep_time_in_milliseconds));
+    std::string blanks(problem.getMemoryProblem().size() + 2, ' ');
+    std::cout << "\r" << blanks << "\r> ";
 
-    string answer;
-    cin >> answer;
+    std::string answer;
+    std::cin >> answer;
     unsigned int score = problem.correctNumber(answer);
-    answers.push_back(
-        tuple<MemoryProblem, string, unsigned int>{problem, answer, score});
+    answers.push_back(std::tuple<MemoryProblem, std::string, unsigned int>{
+        problem, answer, score});
   }
 
   ran = true;
 }
 
 void MemoryQuiz::stopQuiz() {
-  cout << "memory_problem, answer, correct" << endl;
+  std::cout << "memory_problem, answer, correct" << std::endl;
   for (auto &answer : answers) {
-    cout << get<0>(answer).getMemoryProblem() << ", " << get<1>(answer) << ", "
-         << get<2>(answer) << endl;
+    std::cout << std::get<0>(answer).getMemoryProblem() << ", "
+              << std::get<1>(answer) << ", " << std::get<2>(answer)
+              << std::endl;
   }
 }
 
-void MemoryQuiz::writeResultsPerMemoryProblem(string const filename) {
+void MemoryQuiz::writeResultsPerMemoryProblem(std::string const filename) {
   if (ran) {
-    ofstream outfile;
+    std::ofstream outfile;
 
-    if (!filesystem::exists(filename.c_str())) {
+    if (!boost::filesystem::exists(filename.c_str())) {
       outfile.open(filename);
-      outfile << "date,memory_problem,answer,correct" << endl;
+      outfile << "date,memory_problem,answer,correct" << std::endl;
     } else {
-      outfile.open(filename, ios_base::app);
+      outfile.open(filename, std::ios_base::app);
     }
 
     for (auto &answer : answers) {
-      outfile << getCurrentTime() << "," << get<0>(answer).getMemoryProblem()
-              << "," << get<1>(answer) << "," << get<2>(answer) << endl;
+      outfile << getCurrentTime() << ","
+              << std::get<0>(answer).getMemoryProblem() << ","
+              << std::get<1>(answer) << "," << std::get<2>(answer) << std::endl;
     }
   }
 }

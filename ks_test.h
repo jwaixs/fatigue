@@ -1,5 +1,7 @@
-#ifndef KS_TEST_H
-#define KS_TEST_H
+// Copyright 2018 Noud Aldenhoven
+
+#ifndef KS_TEST_H_
+#define KS_TEST_H_
 
 #include <map>
 #include <vector>
@@ -7,7 +9,7 @@
 template <typename T>
 class CumulativeFunction {
  public:
-  CumulativeFunction(std::vector<T>);
+  explicit CumulativeFunction(std::vector<T>);
   void printFunction();
   float operator()(T const &);
   std::vector<T> getStepPositions();
@@ -32,4 +34,4 @@ class TwoSampleKSTest {
   unsigned int n1, n2;
 };
 
-#endif /* KS_TEST_H */
+#endif  // KS_TEST_H_

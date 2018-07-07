@@ -1,21 +1,21 @@
+// Copyright 2018 Noud Aldenhoven
+
 #include <iostream>
 
-#include "speed_problem.h"
+#include "./speed_problem.h"
 
-using namespace std;
-
-SpeedProblem::SpeedProblem(string const p, string const s) {
+SpeedProblem::SpeedProblem(std::string const p, std::string const s) {
   problem = p;
   solution = s;
   number_of_tries = 1;
   time_to_solve = 0.0;
 }
 
-string SpeedProblem::getProblem() { return problem; }
+std::string SpeedProblem::getProblem() { return problem; }
 
-string SpeedProblem::getSolution() { return solution; }
+std::string SpeedProblem::getSolution() { return solution; }
 
-bool SpeedProblem::isCorrect(string const answer) {
+bool SpeedProblem::isCorrect(std::string const answer) {
   if (answer == solution) {
     return true;
   } else {
@@ -28,7 +28,7 @@ void SpeedProblem::addTime(double time) {
   if (time > 0) {
     time_to_solve += time;
   } else {
-    throw runtime_error("Time cannot be negative.");
+    throw std::runtime_error("Time cannot be negative.");
   }
 }
 

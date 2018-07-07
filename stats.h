@@ -1,61 +1,63 @@
+// Copyright 2018 Noud Aldenhoven
+
 #include <map>
 #include <string>
 #include <vector>
-using namespace std;
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 using namespace boost::accumulators;
 
-#include "stats_type.h"
+#include "./stats_type.h"
 
-#ifndef STATS_H
-#define STATS_H
+#ifndef STATS_H_
+#define STATS_H_
 
 class ProblemStats {
  public:
-  ProblemStats(string, string);
-  string getProblem();
-  string getAnswer();
+  ProblemStats(std::string, std::string);
+  std::string getProblem();
+  std::string getAnswer();
   void addTry(unsigned int, double);
-  void addTry(unsigned int, double, string);
+  void addTry(unsigned int, double, std::string);
   unsigned int getNumberOfTries();
   unsigned int getNumberOfCorrectTries();
-  vector<double> getTimePerTry();
-  vector<string> getDatePerTry();
+  std::vector<double> getTimePerTry();
+  std::vector<std::string> getDatePerTry();
   double getMean();
   double getMedian();
   double getStd();
 
  private:
-  string problem;
-  string answer;
+  std::string problem;
+  std::string answer;
   unsigned int number_of_tries;
   unsigned int number_of_correct_tries;
-  vector<double> time_per_try;
-  vector<string> date_per_try;
+  std::vector<double> time_per_try;
+  std::vector<std::string> date_per_try;
   accumulator_set<double, features<tag::mean, tag::median, tag::variance>> acc;
 };
 
 class MemoryStats {
  public:
-  MemoryStats(string const &, string const &, string const &, unsigned int);
-  string const getProblem();
-  string const getAnswer();
-  string const getDate();
+  MemoryStats(std::string const &, std::string const &, std::string const &,
+              unsigned int);
+  std::string const getProblem();
+  std::string const getAnswer();
+  std::string const getDate();
   unsigned int getCorrect();
 
  private:
-  string problem;
-  string answer;
-  string date;
+  std::string problem;
+  std::string answer;
+  std::string date;
   unsigned int correct;
 };
 
 class Statistics {
  public:
-  void readSpeedCSV(string const &);
-  void readMemoryCSV(string const &);
+  void readSpeedCSV(std::string const &);
+  void readMemoryCSV(std::string const &);
   void printProblemMeanHistogram();
   void printMemoryHistogram();
   void printSpeedProblemPerHour();
@@ -68,9 +70,9 @@ class Statistics {
   std::vector<float> getSpeedData();
 
  private:
-  map<string, ProblemStats *> problem_statistics;
+  std::map<std::string, ProblemStats *> problem_statistics;
   std::vector<MemoryStats> memory_statistics;
-  unsigned short const bar_width = 60;
+  uint8_t const bar_width = 60;
 };
 
-#endif /* STATS_H */
+#endif  // STATS_H_

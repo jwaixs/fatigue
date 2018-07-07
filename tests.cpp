@@ -1,14 +1,16 @@
+// Copyright 2018 Noud Aldenhoven
+
+#include <string>
+
 #define BOOST_TEST_MODULE Fatigue_Test_Suite
 #include <boost/range/combine.hpp>
 #include <boost/test/included/unit_test.hpp>
 
-#include <string>
-
-#include "ks_test.h"
-#include "memory_problem.h"
-#include "speed_problem.h"
-#include "stats.h"
-#include "tools.h"
+#include "./ks_test.h"
+#include "./memory_problem.h"
+#include "./speed_problem.h"
+#include "./stats.h"
+#include "./tools.h"
 
 // Floating point tolerance. I don't know how to get unit_test::tolerance
 // working. Hence I test it myself.
@@ -71,7 +73,7 @@ BOOST_AUTO_TEST_CASE(memory_problem) {
   BOOST_CHECK_MESSAGE(mp.correctNumber(problem + "abcde") == problem.size(),
                       "correctNumber() should support longer guesses.");
 
-  for (unsigned long i = 0; i < problem.size(); i++) {
+  for (uint64_t i = 0; i < problem.size(); i++) {
     auto const guess = problem.substr(0, i);
     BOOST_CHECK_MESSAGE(mp.correctNumber(guess) == i,
                         "First " + std::to_string(i) +
@@ -299,7 +301,7 @@ BOOST_AUTO_TEST_CASE(two_sample_Kolmogorov_Smirnov_test) {
    *
    * BOOST_CHECK_MESSAGE(
    *   std::abs(ks_test.getpValue() - 0.14) < twodigit,
-   *   "KS-test should reject the null hypothesis with p-value 0.14. p-value: " +
-   *       std::to_string(ks_test.getpValue()) + ".");
+   *   "KS-test should reject the null hypothesis with p-value 0.14. p-value: "
+   * + std::to_string(ks_test.getpValue()) + ".");
    */
 }

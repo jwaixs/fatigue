@@ -1,9 +1,10 @@
+// Copyright 2018 Noud Aldenhoven
+
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/format.hpp>
@@ -12,15 +13,15 @@ using namespace std;
 #include <boost/tokenizer.hpp>
 using namespace boost;
 
-#include "stats.h"
-#include "tools.h"
+#include "./stats.h"
+#include "./tools.h"
 
 template <typename T>
-ostream &operator<<(ostream &out, const vector<T> &v) {
+std::ostream &operator<<(std::ostream &out, const std::vector<T> &v) {
   out << "[";
 
   if (!v.empty()) {
-    copy(v.begin(), v.end(), ostream_iterator<T>(out, ", "));
+    std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
     out << "\b\b";
   }
 
@@ -28,16 +29,16 @@ ostream &operator<<(ostream &out, const vector<T> &v) {
   return out;
 }
 
-ProblemStats::ProblemStats(string p, string a) {
+ProblemStats::ProblemStats(std::string p, std::string a) {
   problem = p;
   answer = a;
   number_of_tries = 0;
   number_of_correct_tries = 0;
 }
 
-string ProblemStats::getProblem() { return problem; }
+std::string ProblemStats::getProblem() { return problem; }
 
-string ProblemStats::getAnswer() { return answer; }
+std::string ProblemStats::getAnswer() { return answer; }
 
 void ProblemStats::addTry(unsigned int tries, double total_time) {
   number_of_tries += tries;
@@ -46,7 +47,8 @@ void ProblemStats::addTry(unsigned int tries, double total_time) {
   time_per_try.push_back(total_time);
 }
 
-void ProblemStats::addTry(unsigned int tries, double total_time, string date) {
+void ProblemStats::addTry(unsigned int tries, double total_time,
+                          std::string date) {
   date_per_try.push_back(date);
   addTry(tries, total_time);
 }
@@ -57,9 +59,9 @@ unsigned int ProblemStats::getNumberOfCorrectTries() {
   return number_of_correct_tries;
 }
 
-vector<double> ProblemStats::getTimePerTry() { return time_per_try; }
+std::vector<double> ProblemStats::getTimePerTry() { return time_per_try; }
 
-vector<string> ProblemStats::getDatePerTry() { return date_per_try; }
+std::vector<std::string> ProblemStats::getDatePerTry() { return date_per_try; }
 
 double ProblemStats::getMean() { return mean(acc); }
 
@@ -67,34 +69,34 @@ double ProblemStats::getMedian() { return median(acc); }
 
 double ProblemStats::getStd() { return sqrt(variance(acc)); }
 
-MemoryStats::MemoryStats(string const &p, string const &a, string const &d,
-                         unsigned int c) {
+MemoryStats::MemoryStats(std::string const &p, std::string const &a,
+                         std::string const &d, unsigned int c) {
   problem = p;
   answer = a;
   date = d;
   correct = c;
 }
 
-string const MemoryStats::getProblem() { return problem; }
+std::string const MemoryStats::getProblem() { return problem; }
 
-string const MemoryStats::getAnswer() { return answer; }
+std::string const MemoryStats::getAnswer() { return answer; }
 
-string const MemoryStats::getDate() { return date; }
+std::string const MemoryStats::getDate() { return date; }
 
 unsigned int MemoryStats::getCorrect() { return correct; }
 
-void Statistics::readSpeedCSV(string const &csv_path) {
-  ifstream csv;
+void Statistics::readSpeedCSV(std::string const &csv_path) {
+  std::ifstream csv;
   csv.open(csv_path.c_str());
 
   typedef tokenizer<escaped_list_separator<char>> Tokenizer;
-  vector<string> svec;
-  string line;
+  std::vector<std::string> svec;
+  std::string line;
 
   // Get header, and drop it.
   getline(csv, line);
 
-  string date, problem, answer;
+  std::string date, problem, answer;
   unsigned int tries;
   double time;
   while (getline(csv, line)) {
@@ -117,18 +119,18 @@ void Statistics::readSpeedCSV(string const &csv_path) {
   csv.close();
 }
 
-void Statistics::readMemoryCSV(string const &csv_path) {
-  ifstream csv;
+void Statistics::readMemoryCSV(std::string const &csv_path) {
+  std::ifstream csv;
   csv.open(csv_path.c_str());
 
   typedef tokenizer<escaped_list_separator<char>> Tokenizer;
-  vector<string> svec;
-  string line;
+  std::vector<std::string> svec;
+  std::string line;
 
   // Get the header, and drop it.
   getline(csv, line);
 
-  string data, problem, answer;
+  std::string data, problem, answer;
   unsigned int correct;
   while (getline(csv, line)) {
     Tokenizer tok(line);
@@ -167,7 +169,7 @@ void Statistics::printProblemMeanHistogram() {
   auto const bin_length = (max - min) / bins;
 
   if (max <= min) {
-    string const err_msg =
+    std::string const err_msg =
         "printProblemMeanHistogram(): maximum value "
         "should be bigger than minimum value."
         " !(" +
@@ -217,7 +219,7 @@ void Statistics::printMemoryHistogram() {
   auto const max = *std::max_element(histogram.begin(), histogram.end());
 
   if (!(max > min)) {
-    string const err_msg =
+    std::string const err_msg =
         "printmemoryHistogram(): maximum value is not "
         "larger than minimum value."
         "!(" +
