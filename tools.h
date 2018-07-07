@@ -15,4 +15,4 @@ string getMonth(boost::posix_time::ptime const &);
 unsigned short getWeek(boost::posix_time::ptime const &);
 unsigned short getYear(boost::posix_time::ptime const &);
 
-#endif // TOOLS_H
+#endif  // TOOLS_H
