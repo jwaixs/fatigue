@@ -1,4 +1,9 @@
 // Copyright 2018 Noud Aldenhoven
+//
+// Using boost with using-declarations seems almost impossible to me. Therefore
+// disable the cpplint error.
+//
+// cpplint: --filter=-build/namespaces
 
 #include <map>
 #include <string>

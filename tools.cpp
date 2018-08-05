@@ -1,4 +1,10 @@
 // Copyright 2018 Noud Aldenhoven
+//
+// Use non approved c++11 libraries and don't make localtime thread safe,
+// because we're not planning to make the fatigue tool multithreaded. If it
+// will happen this part needs to be rewritten.
+//
+// cpplint: --filter=-build/c++11,-runtime/threadsafe_fn
 
 #include <chrono>
 #include <iomanip>

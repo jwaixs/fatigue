@@ -1,4 +1,8 @@
 // Copyright 2018 Noud Aldenhoven
+//
+// Chrono and thread are unapproved C++11 libraries. Use them anyway.
+//
+// cpplint: --filter=-build/c++11
 
 #include <chrono>
 #include <fstream>

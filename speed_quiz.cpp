@@ -1,4 +1,8 @@
 // Copyright 2018 Noud Aldenhoven
+//
+// Chrono is an unaproved C++11 library. Use them anyway.
+//
+// cpplint: --filter=-build/c++11
 
 #include <chrono>
 #include <fstream>
