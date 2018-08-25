@@ -110,6 +110,17 @@ It is planned to have more statistical tools in the future.
 If you want to contribute to this project please contact me. Any help is
 appreciated.
 
+### Code format and style
+
+All code is formatted with clang-format, based on the Google c++ style
+guide:
+```
+clang-format -assume-filename=.clang-format -i *.cpp *.h
+```
+We use Google's cpplint for code styling. Cpplint should not produce any
+errors. It is possible to disable some errors locally using
+`check_style.sh`.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for
