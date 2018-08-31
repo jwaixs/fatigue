@@ -66,8 +66,8 @@ int main(int argc, char **argv) {
   store(parse_command_line(argc, argv, desc), vm);
   notify(vm);
 
-  if (vm.count("help") || vm.count("h") || !vm.count("in") || !vm.count("i") ||
-      !vm.count("out") || !vm.count("o")) {
+  if (vm.count("help") || vm.count("h") || !(vm.count("in") || vm.count("i")) ||
+      !(vm.count("out") || vm.count("o"))) {
     std::cout << "A small too to convert CSV speed file to sqlite database."
               << std::endl
               << desc;
