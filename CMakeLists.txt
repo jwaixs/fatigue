@@ -22,6 +22,9 @@ add_library(stats stats.cpp)
 add_executable(main main.cpp)
 target_link_libraries(main ${Boost_LIBRARIES} memory_quiz speed_quiz stats)
 
+add_executable(csv2sqlite3 csv2sqlite3.cpp)
+target_link_libraries(csv2sqlite3 ${Boost_LIBRARIES} sqlite3)
+
 add_executable(tests tests.cpp)
 target_link_libraries(tests ${Boost_LIBRARIES} memory_problem speed_problem stats
                             tools ks_test)
