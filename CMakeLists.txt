@@ -27,5 +27,8 @@ add_executable(csv2sqlite3 csv2sqlite3.cpp)
 target_link_libraries(csv2sqlite3 ${Boost_LIBRARIES} sqlite3)
 
 add_executable(tests tests.cpp)
-target_link_libraries(tests ${Boost_LIBRARIES} memory_problem speed_problem stats
-                            tools ks_test)
+target_link_libraries(tests ${Boost_LIBRARIES} memory_problem speed_problem
+  stats tools ks_test)
+
+enable_testing()
+add_test(tests tests)
