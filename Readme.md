@@ -1,8 +1,9 @@
-
 # Fatigue
 
 A tool to measure and register fatigue level of a person, after evaluating a
 simple quiz.
+
+[![Build Status](https://travis-ci.org/noudald/fatigue.svg?branch=master)](https://travis-ci.org/noudald/fatigue)
 
 ## Getting Started
 
