@@ -1,7 +1,9 @@
 // Copyright 2018 Noud Aldenhoven
 
 #include <sqlite3.h>
+
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include <boost/algorithm/string.hpp>
