@@ -11,10 +11,10 @@ compiler:
 addons:
   apt:
     sources:
-      - boost-latest
+      - sourceline: 'ppa:mhier/libboost-latest'
       - ubuntu-toolchain-r-test
     packages:
-      - libboost1.55-all-dev
+      - boost1.67
       - g++-5
       - clang-3.6
 
@@ -23,7 +23,6 @@ install:
   - if [[ "${CXX}" = "clang++" ]]; then export CXX="clang++-3.6"; fi
 
 script:
-  - sudo apt-cache search libboost
   - cmake .
   - make
   - make test
