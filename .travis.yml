@@ -1,13 +1,18 @@
 language: cpp
 
+os:
+  - linux
+
 compiler:
   - g++
   - clang++
+
 
 addons:
   apt:
     sources:
       - boost-latest
+      - ubuntu-toolchain-r-test
     packages:
       - libboost1.55-all-dev
       - g++-5
