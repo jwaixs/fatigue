@@ -5,7 +5,8 @@ os:
 
 compiler:
   - g++
-  - clang++
+  # Disable clang++, because this gives a segmentation fault (but does work).
+  # - clang++
 
 
 addons:
