@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 2.6)
 set (CMAKE_CXX_STANDARD 11)
+
 project (fatigue)
+set (fatigue_VERSION_MAJOR 0)
+set (fatigue_VERSION_MINOR 1)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
