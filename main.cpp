@@ -9,6 +9,8 @@ using boost::program_options::notify;
 using boost::program_options::options_description;
 using boost::program_options::value;
 using boost::program_options::variables_map;
+#include <boost/filesystem.hpp>
+using boost::filesystem::extension;
 
 #include "./memory_quiz.h"
 #include "./speed_quiz.h"
@@ -57,7 +59,17 @@ int main(int argc, char **argv) {
 
   if (vm.count("stats-speed") || vm.count("s")) {
     Statistics stats;
-    stats.readSpeedCSV(result_per_question_csv);
+    if (extension(result_per_question_csv) == ".csv") {
+      stats.readSpeedCSV(result_per_question_csv);
+    } else if (extension(result_per_question_csv) == ".sql" ||
+               extension(result_per_question_csv) == ".sqlite" ||
+               extension(result_per_question_csv) == ".sqlite3") {
+      stats.readSpeedSQL(result_per_question_csv);
+    } else {
+      throw std::runtime_error("Unknown file extension '" +
+                               extension(result_per_question_csv) + "' of " +
+                               result_per_question_csv + ".");
+    }
 
     std::cout << "Speed problem histogram (num of tries):" << std::endl;
     stats.printProblemMeanHistogram();
@@ -98,6 +110,17 @@ int main(int argc, char **argv) {
 
   if (vm.count("stats-memory") || vm.count("t")) {
     Statistics stats;
+    if (extension(result_per_question_csv) == ".csv") {
+      stats.readMemoryCSV(result_per_question_csv);
+    } else if (extension(result_per_question_csv) == ".sql" ||
+               extension(result_per_question_csv) == ".sqlite" ||
+               extension(result_per_question_csv) == ".sqlite3") {
+      stats.readMemorySQL(result_per_question_csv);
+    } else {
+      throw std::runtime_error("Unknown file extension '" +
+                               extension(result_per_question_csv) + "' of " +
+                               result_per_question_csv + ".");
+    }
     stats.readMemoryCSV(result_per_question_csv);
 
     std::cout << std::endl

@@ -62,7 +62,9 @@ class MemoryStats {
 class Statistics {
  public:
   void readSpeedCSV(std::string const &);
+  void readSpeedSQL(std::string const &);
   void readMemoryCSV(std::string const &);
+  void readMemorySQL(std::string const &);
   void printProblemMeanHistogram();
   void printMemoryHistogram();
   void printSpeedProblemPerHour();

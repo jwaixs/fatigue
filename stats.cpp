@@ -5,6 +5,8 @@
 //
 // cpplint: --filter=-build/namespaces
 
+#include <sqlite3.h>
+
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -124,6 +126,59 @@ void Statistics::readSpeedCSV(std::string const &csv_path) {
   csv.close();
 }
 
+void Statistics::readSpeedSQL(std::string const &sql_path) {
+  sqlite3 *db;
+  sqlite3_stmt *stmt;
+
+  if (sqlite3_open(sql_path.c_str(), &db) != SQLITE_OK) {
+    std::string const err_msg =
+        "readSpeedSQL(): could not open SQLite database " + sql_path + ".";
+    throw std::runtime_error(err_msg);
+  }
+
+  std::string const query =
+      "select date, problem, solution, number_of_tries, time_to_solve from "
+      "speed;";
+  if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, NULL) != SQLITE_OK) {
+    std::string const err_msg = "readSpeedSQL(): could not execute query '" +
+                                query + "', compiling error: '" +
+                                sqlite3_errmsg(db) + "'.";
+    sqlite3_close(db);
+    sqlite3_finalize(stmt);
+    throw std::runtime_error(err_msg);
+  }
+
+  int ret_code;
+  while ((ret_code = sqlite3_step(stmt)) == SQLITE_ROW) {
+    const std::string date = std::string(
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    const std::string problem = std::string(
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1)));
+    const std::string solution = std::string(
+        reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2)));
+    const int tries = sqlite3_column_int(stmt, 3);
+    const double time = sqlite3_column_double(stmt, 4);
+
+    auto const search = problem_statistics.find(problem);
+    if (search == problem_statistics.end()) {
+      problem_statistics.emplace(problem, new ProblemStats(problem, solution));
+    }
+    problem_statistics[problem]->addTry(tries, time, date);
+  }
+
+  if (ret_code != SQLITE_DONE) {
+    std::string const err_msg =
+        "readSpeedSQL(): error while executing query '" + query +
+        "', compiling error: '" + sqlite3_errmsg(db) + "'.";
+    sqlite3_close(db);
+    sqlite3_finalize(stmt);
+    throw std::runtime_error(err_msg);
+  }
+
+  sqlite3_close(db);
+  sqlite3_finalize(stmt);
+}
+
 void Statistics::readMemoryCSV(std::string const &csv_path) {
   std::ifstream csv;
   csv.open(csv_path.c_str());
@@ -151,6 +206,10 @@ void Statistics::readMemoryCSV(std::string const &csv_path) {
   }
 
   csv.close();
+}
+
+void Statistics::readMemorySQL(std::string const &sql_path) {
+  throw std::runtime_error("readMemorySQL(): Not implemented.");
 }
 
 void Statistics::printProblemMeanHistogram() {
