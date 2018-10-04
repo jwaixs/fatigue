@@ -1,9 +1,14 @@
 language: cpp
-before_install:
-  - sudo add-apt-repository ppa:apokluda/boost1.65 --yes
-  - sudo apt-get update
-  - sudo apt-get install libboost
+
+addons:
+  apt:
+    sources:
+      - boost-latest
+    packages:
+      - libboost1.65-all-dev
+
 install: true
+
 script:
   - cmake .
   - make
