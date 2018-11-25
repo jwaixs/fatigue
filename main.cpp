@@ -17,6 +17,10 @@ using boost::filesystem::extension;
 #include "./stats.h"
 #include "./stats_type.h"
 
+#define VERSION_MAJOR 0
+#define VERSION_MINOR 1
+#define AUTHOR "Noud Aldenhoven"
+
 int main(int argc, char **argv) {
   std::string result_csv;
   std::string result_per_question_file;
@@ -24,6 +28,7 @@ int main(int argc, char **argv) {
   bool do_problem_quiz, do_memory_quiz;
   bool display_median, display_mean;
   bool display_individual;
+  bool display_version;
 
   options_description desc("Allowed options");
   desc.add_options()("help,h", "Print help usage.")(
@@ -44,14 +49,21 @@ int main(int argc, char **argv) {
       "Display median values for stats per hour and day.")(
       "display-individual",
       bool_switch(&display_individual)->default_value(false),
-      "Display each problem individually");
+      "Display each problem individually")(
+      "version", bool_switch(&display_version)->default_value(false));
 
   variables_map vm;
   store(parse_command_line(argc, argv, desc), vm);
   notify(vm);
 
+  if (vm.count("version")) {
+    std::cout << "Fatigue v" << VERSION_MAJOR << "." << VERSION_MINOR
+      << ": Measure your fatigueness in the terminal." << std::endl
+      << "Created by " << AUTHOR << "." << std::endl;
+  }
+
   if (vm.count("help") || vm.count("h")) {
-    std::cout << "Progam to measure your fatigueness doing a small quiz."
+    std::cout << "Measure your fatigueness doing a small quiz."
               << std::endl
               << desc;
     return 0;
