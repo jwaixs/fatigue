@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
   SQLite3 db(sqlite_output_file);
   db.execute(
       "create table speed("
-      "id int primary key not null,"
+      "id integer primary key autoincrement,"
       "date string not null,"
       "problem string not null,"
       "solution int not null,"

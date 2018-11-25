@@ -17,6 +17,7 @@ class SpeedQuiz {
   void stopQuiz();
   void writeResults(std::string);
   void writeResultsPerQuestion(std::string);
+  void writeResultsPerQuestionSQL(std::string);
   float zeroHypothesis(std::string const &);
 
  private:

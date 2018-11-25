@@ -3,10 +3,11 @@
 #include <sqlite3.h>
 
 #include <iostream>
+#include <string>
 
 #include <boost/filesystem.hpp>
 
-#include "sqlite3_helper.h"
+#include "./sqlite3_helper.h"
 
 SQLite3::SQLite3(const boost::filesystem::path &sql_path) {
   if (sqlite3_open(sql_path.c_str(), &db)) {

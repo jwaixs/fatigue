@@ -16,6 +16,7 @@
 
 #include "./ks_test.h"
 #include "./speed_quiz.h"
+#include "./sqlite3_helper.h"
 #include "./stats.h"
 #include "./tools.h"
 
@@ -112,6 +113,11 @@ std::vector<float> SpeedQuiz::getSpeedData() {
 }
 
 float SpeedQuiz::zeroHypothesis(std::string const &csv_path) {
+  if (!boost::filesystem::exists(csv_path) ||
+      boost::filesystem::extension(csv_path) != ".csv") {
+    return -1;
+  }
+
   Statistics speed_stats;
   speed_stats.readSpeedCSV(csv_path);
 
@@ -159,5 +165,37 @@ void SpeedQuiz::writeResultsPerQuestion(std::string filename) {
               << p.getTimeToSolve() << std::endl;
     }
     outfile.close();
+  }
+}
+
+void SpeedQuiz::writeResultsPerQuestionSQL(std::string filename) {
+  if (ran) {
+    SQLite3 db(filename);
+
+    db.execute(
+        "create table if not exists speed("
+        "id integer primary key autoincrement,"
+        "date string not null,"
+        "problem string not null,"
+        "solution int not null,"
+        "number_of_tries int not null,"
+        "time_to_solve real not null"
+        ");");
+
+    for (auto &p : correct_answers) {
+      db.execute(
+          "insert into speed (date, problem, solution, number_of_tries, "
+          "time_to_solve) values ("
+          "\"" +
+          getCurrentTime() + "\",\"" + p.getProblem() + "\",\"" +
+          p.getSolution() + "\",\"" + std::to_string(p.getNumberOfTries()) +
+          "\",\"" + std::to_string(p.getTimeToSolve()) + "\");");
+    }
+    db.commit();
+  } else {
+    const std::string err_str =
+        "SpeedQuiz::writeResultsSQL: "
+        "Cannot write results if speed quiz didn't run.";
+    throw std::runtime_error(err_str);
   }
 }

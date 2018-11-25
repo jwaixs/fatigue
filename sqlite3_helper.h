@@ -1,6 +1,11 @@
 // Copyright 2018 Noud Aldenhoven
 
+#ifndef SQLITE3_HELPER_H_
+#define SQLITE3_HELPER_H_
+
 #include <sqlite3.h>
+
+#include <string>
 
 #include <boost/filesystem.hpp>
 
@@ -17,3 +22,5 @@ class SQLite3 {
   sqlite3_stmt *stmt = NULL;
   std::string query_str;
 };
+
+#endif  // SQLITE3_HELPER_H_
