@@ -22,12 +22,14 @@ add_library(speed_quiz speed_quiz.cpp)
 target_link_libraries(speed_quiz speed_problem ${Boost_LIBRARIES} ks_test)
 add_library(stats stats.cpp)
 target_link_libraries(stats sqlite3)
+add_library(sqlite3_helper sqlite3_helper.cpp)
+target_link_libraries(sqlite3_helper sqlite3)
 
 add_executable(main main.cpp)
 target_link_libraries(main ${Boost_LIBRARIES} memory_quiz speed_quiz stats)
 
 add_executable(csv2sqlite3 csv2sqlite3.cpp)
-target_link_libraries(csv2sqlite3 ${Boost_LIBRARIES} sqlite3)
+target_link_libraries(csv2sqlite3 ${Boost_LIBRARIES} sqlite3_helper)
 
 add_executable(tests tests.cpp)
 target_link_libraries(tests ${Boost_LIBRARIES} memory_problem speed_problem
