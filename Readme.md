@@ -14,6 +14,10 @@ Clone the repository
 ```
 git clone https://github.com/jwaixs/fatigue.git
 ```
+Required packages:
+```
+libsqlite3-dev
+```
 Create a build dir and compile the source code with your favorite compile. I
 would compile fatigue with Ninja:
 ```
